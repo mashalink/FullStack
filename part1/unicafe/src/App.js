@@ -16,7 +16,7 @@ const Button = ({handleClick, text}) => {
   )
 }
 
-const Statistic = ({counter, text}) => {
+const StatisticLine = ({counter, text}) => {
   console.log({counter, text})
   return (
     <td>{text} {counter}</td>
@@ -26,18 +26,23 @@ const Statistic = ({counter, text}) => {
 const Statistics = ({good, neutral, bad}) => {
   console.log({good, neutral, bad})
   const all = good + neutral + bad;
+
+  if (all === 0) {
+    return <p>No feedback given</p>
+  }
+
   const average = (good - bad) / all;
   const positive = good / all * 100 + ' %';
 
   return (
     <table>
       <tbody>
-        <tr><Statistic counter={good} text={"good"}/></tr>
-        <tr><Statistic counter={neutral} text={"neutral"}/></tr>
-        <tr><Statistic counter={bad} text="bad"/></tr>
-        <tr><Statistic counter={all} text="all"/></tr>
-        <tr><Statistic counter={average} text="average"/></tr>
-        <tr><Statistic counter={positive} text="positive"/></tr>
+        <tr><StatisticLine counter={good} text={"good"}/></tr>
+        <tr><StatisticLine counter={neutral} text={"neutral"}/></tr>
+        <tr><StatisticLine counter={bad} text="bad"/></tr>
+        <tr><StatisticLine counter={all} text="all"/></tr>
+        <tr><StatisticLine counter={average} text="average"/></tr>
+        <tr><StatisticLine counter={positive} text="positive"/></tr>
       </tbody>
     </table>
   )
