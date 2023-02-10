@@ -3,7 +3,7 @@ import { useState } from 'react'
 const Header  = ({header}) => {
   console.log({header})
   return (
-      <h1>{header}</h1>
+    <h1>{header}</h1>
   )
 }
 
@@ -19,20 +19,25 @@ const Button = ({handleClick, text}) => {
 const Statistic = ({counter, text}) => {
   console.log({counter, text})
   return (
-        <tr>
-          <td>{text} {counter}</td>
-        </tr>
+    <td>{text} {counter}</td>
   )
 }
 
 const Statistics = ({good, neutral, bad}) => {
   console.log({good, neutral, bad})
+  const all = good + neutral + bad;
+  const average = (good - bad) / all;
+  const positive = good / all * 100 + ' %';
+
   return (
     <table>
       <tbody>
-      <Statistic counter={good} text={"good"}/>
-      <Statistic counter={neutral} text={"neutral"}/>
-      <Statistic counter={bad} text="bad"/>
+        <tr><Statistic counter={good} text={"good"}/></tr>
+        <tr><Statistic counter={neutral} text={"neutral"}/></tr>
+        <tr><Statistic counter={bad} text="bad"/></tr>
+        <tr><Statistic counter={all} text="all"/></tr>
+        <tr><Statistic counter={average} text="average"/></tr>
+        <tr><Statistic counter={positive} text="positive"/></tr>
       </tbody>
     </table>
   )
