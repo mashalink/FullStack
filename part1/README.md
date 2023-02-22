@@ -1,7 +1,4 @@
-Create an application:
-    npx create-react-app name_for_folder
-
-    cd part1
+execises 1.1. - 1.14.
 
 The application runs:
     npm start
@@ -15,3 +12,9 @@ In some situations you may also have to run the command below from the root of t
     rm -rf node_modules/ && npm i
 (If and when you encounter an error message
     Objects are not valid as a React child)
+
+Notes for me:
+Create an application:
+    npx create-react-app name_for_folder
+
+    cd name_for_folder
