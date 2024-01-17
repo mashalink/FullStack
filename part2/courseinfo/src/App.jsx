@@ -1,6 +1,6 @@
 import React from 'react';
-import Course from './components/Course';
-import Header from './components/Header';
+import Course from './components/Course.jsx';
+import Header from './components/Header.jsx';
 
 const App = () => {
   const courses = [
