@@ -1,7 +1,8 @@
-import { useState } from "react";
+import { useState, useMemo } from "react";
 import PersonsList from "./components/PersonsList.jsx";
 import Header from "./components/Header.jsx";
 import PersonForm from "./components/PersonForm.jsx";
+import Filter from "./components/Filter.jsx";
 import "./App.css";
 
 const initialPersons = [
@@ -15,6 +16,7 @@ const App = () => {
   const [persons, setPersons] = useState(initialPersons);
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
+  const [filter, setFilter] = useState("");
 
   const addPerson = (event) => {
     event.preventDefault();
@@ -52,9 +54,17 @@ const App = () => {
     setNewNumber("");
   };
 
+  const personsToShow = useMemo(() => {
+    const q = filter.trim().toLowerCase();
+    return q
+      ? persons.filter((p) => p.name.toLowerCase().includes(q))
+      : persons;
+  }, [filter, persons]);
+
   return (
     <div>
       <Header name={"Phonebook"} />
+      <Filter filter={filter} setFilter={(e) => setFilter(e.target.value)} />
       <Header name={"add a new"} />
       <PersonForm
         onSubmit={addPerson}
@@ -64,7 +74,7 @@ const App = () => {
         handleNumberChange={(e) => setNewNumber(e.target.value)}
       />
       <Header name={"Numbers"} />
-      <PersonsList persons={persons} />
+      <PersonsList persons={personsToShow} />
     </div>
   );
 };
