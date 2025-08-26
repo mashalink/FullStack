@@ -1,7 +1,9 @@
 const Person = ({ person }) => {
-    return (
-      <li>{person.name}</li>
-    )
-  }
-  
-  export default Person
+  return (
+    <li>
+      {person.name} - {person.phone}
+    </li>
+  );
+};
+
+export default Person;
