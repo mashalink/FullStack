@@ -1,6 +1,7 @@
 import { useState, useMemo } from "react";
 import PersonsList from "./components/PersonsList.jsx";
 import Header from "./components/Header.jsx";
+import SmallHeader from "./components/SmallHeader.jsx";
 import PersonForm from "./components/PersonForm.jsx";
 import Filter from "./components/Filter.jsx";
 import "./App.css";
@@ -65,7 +66,7 @@ const App = () => {
     <div>
       <Header name={"Phonebook"} />
       <Filter filter={filter} setFilter={(e) => setFilter(e.target.value)} />
-      <Header name={"add a new"} />
+      <SmallHeader name={"add a new"} />
       <PersonForm
         onSubmit={addPerson}
         newName={newName}
@@ -73,7 +74,7 @@ const App = () => {
         newNumber={newNumber}
         handleNumberChange={(e) => setNewNumber(e.target.value)}
       />
-      <Header name={"Numbers"} />
+      <SmallHeader name={"Numbers"} />
       <PersonsList persons={personsToShow} />
     </div>
   );
