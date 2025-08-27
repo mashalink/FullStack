@@ -43,6 +43,16 @@ npm i                                 # install default Vite/React deps
 npm i -D json-server concurrently      # install dev tools: json-server + concurrently
 
 # -----------------------------
+# Detect free port for json-server
+# -----------------------------
+API_PORT=3001
+while lsof -i :$API_PORT >/dev/null 2>&1; do
+  API_PORT=$((API_PORT+1))
+done
+
+echo "▶ json-server will use port $API_PORT"
+
+# -----------------------------
 # Mock Database Setup
 # -----------------------------
 echo "▶ Creating db.json (mock data)"
@@ -58,19 +68,18 @@ JSON
 # -----------------------------
 # Vite Proxy Configuration
 # -----------------------------
-echo "▶ Setting up Vite dev-server proxy to /api → http://localhost:3001"
-cat > vite.config.js <<'JS'
+echo "▶ Setting up Vite dev-server proxy to /api → http://localhost:$API_PORT"
+cat > vite.config.js <<JS
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 3000,
+    // Vite will pick 5173 or another free port automatically
     proxy: {
-      // Any request starting with /api will be proxied to json-server
       '/api': {
-        target: 'http://localhost:3001',
+        target: 'http://localhost:$API_PORT',
         changeOrigin: true,
         rewrite: path => path.replace(/^\/api/, '')
       }
@@ -124,7 +133,7 @@ export default function App() {
           </li>
         ))}
       </ul>
-      <p style={{opacity:.7}}>API: <code>/api/todos</code> → proxied to <code>http://localhost:3001/todos</code></p>
+      <p style={{opacity:.7}}>API: <code>/api/todos</code> → proxied to <code>http://localhost:$API_PORT/todos</code></p>
     </div>
   )
 }
@@ -134,39 +143,54 @@ JSX
 # Update package.json Scripts
 # -----------------------------
 echo "▶ Updating package.json scripts"
-node - <<'NODE'
-const fs = require('fs')
-const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'))
+node -e '
+const fs = require("fs");
+const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
+const apiPort = process.env.API_PORT || 3001;
 
 pkg.scripts = {
   ...pkg.scripts,
-  "dev": "vite",                      // start frontend only
-  "build": "vite build",              // production build
-  "preview": "vite preview",          // preview built app
-  "server": "json-server --watch db.json --port 3001", // start json-server
-  "dev:all": "concurrently -n web,api -c auto \"npm run dev\" \"npm run server\"" // start both
-}
+  "dev": "vite --open",                      // start frontend only and open browser
+  "build": "vite build",                    // production build
+  "preview": "vite preview",                // preview built app
+  "server": `json-server --watch db.json --port ${apiPort}`,
+  "dev:all": `concurrently -n web,api -c auto \"npm run dev\" \"npm run server\"`
+};
 
-fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2))
-console.log('package.json scripts added:')
-console.log(pkg.scripts)
-NODE
+fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2));
+console.log("package.json scripts added:");
+console.log(pkg.scripts);
+'
 
 # -----------------------------
 # Final Instructions
 # -----------------------------
-cat <<'TXT'
+cat <<TXT
 
 ✅ Setup complete!
 
 Run the whole stack with:
   npm run dev:all
-  - web:  http://localhost:3000   (Vite + React)
-  - api:  http://localhost:3001   (json-server; example: /todos)
+
+Ports in use:
+  - frontend (Vite): will be shown in terminal when you run it (e.g., http://localhost:5173)
+  - backend (json-server): http://localhost:$API_PORT
+
+After running npm run dev:all you will see both logs mixed.
+Look for a message like:
+
+  VITE  vX.X.X  ready in XXX ms
+  ➜  Local:   http://localhost:5173/
+
+and also:
+
+  [api]  JSON Server is running
+  [api]  Resources
+  [api]  http://localhost:$API_PORT/todos
 
 Examples:
-  GET  http://localhost:3001/todos
-  GET  http://localhost:3000/api/todos   (via proxy, just fetch('/api/todos') from frontend)
+  GET  http://localhost:$API_PORT/todos
+  GET  http://localhost:5173/api/todos   (via proxy, just fetch('/api/todos') from frontend)
 
 Useful commands:
   npm run dev       — frontend only
