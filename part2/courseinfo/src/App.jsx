@@ -1,51 +1,28 @@
+import { useEffect, useState } from "react";
 import Course from "./components/Course.jsx";
 import Header from "./components/Header.jsx";
+import { getCourses } from "./services/api.js";
 
 const App = () => {
-  const courses = [
-    {
-      name: "Half Stack application development",
-      id: 1,
-      parts: [
-        {
-          name: "Fundamentals of React",
-          exercises: 10,
-          id: 1,
-        },
-        {
-          name: "Using props to pass data",
-          exercises: 7,
-          id: 2,
-        },
-        {
-          name: "State of a component",
-          exercises: 14,
-          id: 3,
-        },
-        {
-          name: "Redux",
-          exercises: 11,
-          id: 4,
-        },
-      ],
-    },
-    {
-      name: "Node.js",
-      id: 2,
-      parts: [
-        {
-          name: "Routing",
-          exercises: 3,
-          id: 1,
-        },
-        {
-          name: "Middlewares",
-          exercises: 7,
-          id: 2,
-        },
-      ],
-    },
-  ];
+  const [courses, setCourses] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    (async () => {
+      try {
+        const data = await getCourses();
+        setCourses(data);
+      } catch (e) {
+        setError("Failed to load courses");
+      } finally {
+        setLoading(false);
+      }
+    })();
+  }, []);
+
+  if (loading) return <p>Loading courses…</p>;
+  if (error) return <p style={{ color: "crimson" }}>{error}</p>;
 
   return (
     <div>
