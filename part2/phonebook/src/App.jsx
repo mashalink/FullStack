@@ -4,7 +4,7 @@ import Header from "./components/Header.jsx";
 import SmallHeader from "./components/SmallHeader.jsx";
 import PersonForm from "./components/PersonForm.jsx";
 import Filter from "./components/Filter.jsx";
-import { getPersons } from "../services/api.js";
+import { getPersons, createPerson } from "../services/api.js";
 import "./App.css";
 
 const App = () => {
@@ -12,9 +12,9 @@ const App = () => {
   const [newName, setNewName] = useState("");
   const [newNumber, setNewNumber] = useState("");
   const [filter, setFilter] = useState("");
-  const [query, setQuery] = useState("");
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [saving, setSaving] = useState(false);
 
   // Load initial data with .then/.catch/.finally
   useEffect(() => {
@@ -28,16 +28,18 @@ const App = () => {
 
   // Derived data: filter + sort (memoized)
   const personsToShow = useMemo(() => {
-    const q = query.trim().toLowerCase();
+    const q = filter.trim().toLowerCase();
     const list = q
       ? persons.filter((p) => p.name.toLowerCase().includes(q))
       : persons.slice(); // copy because sort mutates
     return list.sort((a, b) => a.name.localeCompare(b.name));
-  }, [query, persons]);
+  }, [filter, persons]);
 
   // Add a new person locally (no server POST here)
   const addPerson = (e) => {
     e.preventDefault();
+
+    if (saving) return;
 
     const name = newName.trim();
     const number = newNumber.trim();
@@ -51,19 +53,26 @@ const App = () => {
     if (nameExists) return alert(`${name} is already in the phonebook`);
     if (numberExists) return alert(`${number} is already in the phonebook`);
 
-    const nextId =
-      persons.length === 0 ? 1 : Math.max(...persons.map((p) => p.id)) + 1;
-
-    setPersons((prev) => prev.concat({ id: nextId, name, number }));
-    setNewName("");
-    setNewNumber("");
+    setSaving(true);
+    createPerson({ name, number })
+      .then((saved) => {
+        // server returns the saved person WITH id
+        setPersons((prev) => prev.concat(saved));
+        setNewName("");
+        setNewNumber("");
+      })
+      .catch((err) => {
+        const msg = err?.response?.data?.error || "Failed to save person";
+        setError(msg);
+      })
+      .finally(() => setSaving(false));
   };
 
   return (
     <div>
       <Header name="Phonebook" />
 
-      <Filter filter={query} setFilter={(e) => setQuery(e.target.value)} />
+      <Filter filter={filter} setFilter={(e) => setFilter(e.target.value)} />
 
       <SmallHeader name="Add a new" />
       <PersonForm
@@ -87,7 +96,7 @@ const App = () => {
             <PersonsList persons={personsToShow} />
           ) : (
             <p>
-              {query
+              {filter
                 ? `No matches for “${filter}”.`
                 : "No persons yet. Add someone above."}
             </p>
