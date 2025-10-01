@@ -9,16 +9,11 @@ const App = () => {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    (async () => {
-      try {
-        const data = await getCourses();
-        setCourses(data);
-      } catch (e) {
-        setError("Failed to load courses");
-      } finally {
-        setLoading(false);
-      }
-    })();
+    setLoading(true);
+    getCourses()
+      .then((data) => setCourses(data))
+      .catch(() => setError("Failed to load courses"))
+      .finally(() => setLoading(false));
   }, []);
 
   if (loading) return <p>Loading courses…</p>;
