@@ -6,10 +6,8 @@ const api = axios.create({ baseURL: "http://localhost:3001" });
 // const api = axios.create({ baseURL: "http://localhost:3001", timeout: 1 });
 
 const getPersons = () => {
-  return api
-    .get("/persons")
-    .then((r) => r.data)
-    .then((data) => new Promise((res) => setTimeout(() => res(data), 1500))); // for testing loading state
+  return api.get("/persons").then((r) => r.data);
+  //.then((data) => new Promise((res) => setTimeout(() => res(data), 1500))); // for testing loading state
 };
 
 const createPerson = (person) => {
@@ -25,3 +23,5 @@ const deletePerson = (id) => {
 };
 
 export { getPersons, createPerson, updatePerson, deletePerson };
+
+// export default { getAll: getPersons, create: createPerson, update: updatePerson, remove: deletePerson };

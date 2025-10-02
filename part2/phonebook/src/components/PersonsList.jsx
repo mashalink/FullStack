@@ -1,6 +1,6 @@
-import Person from "./Person";
+import Person from "./Person.jsx";
 
-const PersonsList = ({ persons }) => {
+export default function PersonsList({ persons }) {
   if (!persons?.length) {
     return <p>No entries yet</p>;
   }
@@ -12,6 +12,4 @@ const PersonsList = ({ persons }) => {
       ))}
     </ul>
   );
-};
-
-export default PersonsList;
+}
