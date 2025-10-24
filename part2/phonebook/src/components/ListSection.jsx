@@ -5,6 +5,7 @@ export default function ListSection({
   error,
   personsToShow = [],
   filter,
+  onDelete,
 }) {
   return (
     <div aria-live="polite">
@@ -14,7 +15,7 @@ export default function ListSection({
       {!loading &&
         !error &&
         (personsToShow.length > 0 ? (
-          <PersonsList persons={personsToShow} />
+          <PersonsList persons={personsToShow} onDelete={onDelete} />
         ) : (
           <p>
             {filter

@@ -1,7 +1,6 @@
-import { createPerson } from "../../services/persons.js";
 import { useState } from "react";
+import { createPerson, updatePerson } from "../../services/persons.js";
 
-// Creates a person via the server and updates state
 export function useCreatePerson({
   persons,
   setPersons,
@@ -12,38 +11,67 @@ export function useCreatePerson({
   setNewNumber,
 }) {
   const [saving, setSaving] = useState(false);
-  const addPerson = (e) => {
-    e.preventDefault();
 
+  const addPerson = async (e) => {
+    e.preventDefault();
     if (saving) return;
 
-    const name = newName.trim();
+    const originalName = newName.trim();
     const number = newNumber.trim();
-    if (!name || !number) return;
+    if (!originalName || !number) return;
 
-    const nameExists = persons.some(
-      (p) => p.name.toLowerCase() === name.toLowerCase()
+    const norm = (s) => s.trim().toLowerCase();
+
+    const existing = persons.find((p) => norm(p.name) === norm(originalName));
+
+    const numberUsedByAnother = persons.some(
+      (p) => p.number === number && (!existing || p.id !== existing.id)
     );
-    const numberExists = persons.some((p) => p.number === number);
-
-    if (nameExists) return alert(`${name} is already in the phonebook`);
-    if (numberExists) return alert(`${number} is already in the phonebook`);
+    if (numberUsedByAnother) {
+      alert(`The number ${number} is already used by another contact.`);
+      return;
+    }
 
     setError(null);
     setSaving(true);
 
-    createPerson({ name, number })
-      .then((saved) => {
-        // server returns the saved person WITH id
-        setPersons((prev) => prev.concat(saved));
+    try {
+      if (existing) {
+        if ((existing.number ?? "") === number) {
+          alert(`"${existing.name}" already has the number ${number}.`);
+          return;
+        }
+
+        const ok = window.confirm(
+          `"${existing.name}" is already in the phonebook. Replace ${
+            existing.number ?? "—"
+          } with ${number}?`
+        );
+        if (!ok) return;
+
+        const updated = await updatePerson(existing.id, {
+          ...existing,
+          number,
+        });
+        setPersons((prev) =>
+          prev.map((p) => (p.id === updated.id ? updated : p))
+        );
         setNewName("");
         setNewNumber("");
-      })
-      .catch((err) => {
-        const msg = err?.response?.data?.error || "Failed to save person";
-        setError(msg);
-      })
-      .finally(() => setSaving(false));
+        return;
+      }
+
+      const created = await createPerson({ name: originalName, number });
+      setPersons((prev) => prev.concat(created));
+      setNewName("");
+      setNewNumber("");
+    } catch (err) {
+      const msg = err?.response?.data?.error || "Failed to save person";
+      setError(msg);
+    } finally {
+      setSaving(false);
+    }
   };
-  return { addPerson };
+
+  return { addPerson, saving };
 }

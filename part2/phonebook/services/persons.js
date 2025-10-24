@@ -18,10 +18,10 @@ const updatePerson = (id, person) => {
   return api.put(`/persons/${id}`, person).then((r) => r.data);
 };
 
-const deletePerson = (id) => {
+const deletePersonById = (id) => {
   return api.delete(`/persons/${id}`).then((r) => r.data);
 };
 
-export { getPersons, createPerson, updatePerson, deletePerson };
+export { getPersons, createPerson, updatePerson, deletePersonById };
 
 // export default { getAll: getPersons, create: createPerson, update: updatePerson, remove: deletePerson };
