@@ -10,10 +10,8 @@ export default function ListSection({
   return (
     <div aria-live="polite">
       {loading && <p>Loading persons…</p>}
-      {error && <p style={{ color: "crimson" }}>{error}</p>}
 
       {!loading &&
-        !error &&
         (personsToShow.length > 0 ? (
           <PersonsList persons={personsToShow} onDelete={onDelete} />
         ) : (

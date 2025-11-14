@@ -1,4 +1,4 @@
-const Header2 = ({ name }) => {
+const CourseHeader = ({ name }) => {
   return <h2>{name}</h2>;
 };
 
@@ -33,7 +33,7 @@ const Course = ({ course }) => {
   console.log({ course });
   return (
     <div>
-      <Header2 name={course.name} />
+      <CourseHeader name={course.name} />
       <Content parts={course.parts} />
       <Total parts={course.parts} />
     </div>

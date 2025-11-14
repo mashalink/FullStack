@@ -5,7 +5,7 @@ export function useDeletePerson({ persons, setPersons, setError }) {
     const { id, name } = person;
     if (!window.confirm(`Delete ${name}?`)) return;
 
-    const prev = persons;
+    const prev = persons.slice();
     setPersons((ps) => ps.filter((p) => p.id !== id));
 
     deletePersonById(id)

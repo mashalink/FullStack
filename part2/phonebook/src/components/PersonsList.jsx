@@ -9,7 +9,7 @@ export default function PersonsList({ persons, onDelete }) {
     <ul>
       {persons.map((p) => (
         <li key={p.id}>
-          {p.name} {p.number}{" "}
+          <Person person={p} />{" "}
           <button onClick={() => onDelete(p)}>delete</button>
         </li>
       ))}

@@ -1,10 +1,11 @@
 import { useState } from "react";
 import { createPerson, updatePerson } from "../../services/persons.js";
 
-export function useCreatePerson({
+export function useCreateUpdatePerson({
   persons,
   setPersons,
   setError,
+  setSuccessMessage,
   newName,
   setNewName,
   newNumber,
@@ -58,6 +59,8 @@ export function useCreatePerson({
         );
         setNewName("");
         setNewNumber("");
+        setSuccessMessage(`Updated number for ${updated.name}`);
+        setTimeout(() => setSuccessMessage(null), 5000);
         return;
       }
 
@@ -65,13 +68,21 @@ export function useCreatePerson({
       setPersons((prev) => prev.concat(created));
       setNewName("");
       setNewNumber("");
+      setSuccessMessage(`Added ${created.name}`);
+      setTimeout(() => setSuccessMessage(null), 5000);
     } catch (err) {
+      if (err?.response?.status === 404) {
+        setError(
+          `Information of "${existing.name}" has already been removed from server`
+        );
+        setPersons((prev) => prev.filter((p) => p.id !== existing.id));
+        return;
+      }
       const msg = err?.response?.data?.error || "Failed to save person";
       setError(msg);
     } finally {
       setSaving(false);
     }
   };
-
   return { addPerson, saving };
 }
