@@ -2,58 +2,51 @@
 set -euo pipefail
 
 # -----------------------------
-# Usage Instructions
-# -----------------------------
-# Save this file as setup.sh (or any name you like)
-# Make it executable:  chmod +x setup.sh
-# Run it:              ./setup.sh my-app
-# If you omit "my-app", it will default to folder name "my-app".
-
-# -----------------------------
-# Project Setup
+# 1. Имя проекта
 # -----------------------------
 APP_NAME="${1:-my-app}"
 
-# Create a new Vite React project
 echo "▶ Creating Vite React app: $APP_NAME"
+
+# Создаём проект Vite + React
+# В некоторых версиях create-vite задаёт вопросы.
+# Важно: если спросит "Install and start now?" — отвечай NO.
 npm create vite@latest "$APP_NAME" -- --template react
 
 cd "$APP_NAME"
 
 # -----------------------------
-# Clean up public folder
+# 2. Чистим public
 # -----------------------------
 echo "▶ Cleaning up public folder"
-rm -rf public/*
+rm -rf public/* || true
 
 # -----------------------------
-# Clean up index.html
+# 3. Чистим index.html
 # -----------------------------
 echo "▶ Cleaning up index.html"
-# Remove favicon link line and replace <title>
 sed -i.bak "/vite.svg/d" index.html
 sed -i.bak "s|<title>.*</title>|<title>$APP_NAME</title>|" index.html
 rm -f index.html.bak
 
 # -----------------------------
-# Install Dependencies
+# 4. Ставим зависимости
 # -----------------------------
 echo "▶ Installing dependencies"
-npm i                                 # install default Vite/React deps
-npm i -D json-server concurrently      # install dev tools: json-server + concurrently
+npm i
+npm i -D json-server concurrently
 
 # -----------------------------
-# Detect free port for json-server
+# 5. Находим свободный порт для json-server
 # -----------------------------
 API_PORT=3001
 while lsof -i :$API_PORT >/dev/null 2>&1; do
   API_PORT=$((API_PORT+1))
 done
-
 echo "▶ json-server will use port $API_PORT"
 
 # -----------------------------
-# Mock Database Setup
+# 6. Создаём db.json
 # -----------------------------
 echo "▶ Creating db.json (mock data)"
 cat > db.json <<'JSON'
@@ -66,9 +59,9 @@ cat > db.json <<'JSON'
 JSON
 
 # -----------------------------
-# Vite Proxy Configuration
+# 7. vite.config.js с прокси на /api
 # -----------------------------
-echo "▶ Setting up Vite dev-server proxy to /api → http://localhost:$API_PORT"
+echo "▶ Writing vite.config.js"
 cat > vite.config.js <<JS
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
@@ -76,12 +69,11 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    // Vite will pick 5173 or another free port automatically
     proxy: {
       '/api': {
         target: 'http://localhost:$API_PORT',
         changeOrigin: true,
-        rewrite: path => path.replace(/^\/api/, '')
+        rewrite: path => path.replace(/^\\/api/, '')
       }
     }
   }
@@ -89,12 +81,11 @@ export default defineConfig({
 JS
 
 # -----------------------------
-# Example API Client + Component
+# 8. Простенький API-клиент
 # -----------------------------
 echo "▶ Adding example API client and demo component"
 mkdir -p src/services
 
-# API helper file
 cat > src/services/api.js <<'JS'
 export async function getTodos() {
   const res = await fetch('/api/todos')
@@ -103,7 +94,6 @@ export async function getTodos() {
 }
 JS
 
-# Replace App.jsx with demo that uses the API
 cat > src/App.jsx <<'JSX'
 import { useEffect, useState } from 'react'
 import './App.css'
@@ -133,70 +123,49 @@ export default function App() {
           </li>
         ))}
       </ul>
-      <p style={{opacity:.7}}>API: <code>/api/todos</code> → proxied to <code>http://localhost:$API_PORT/todos</code></p>
+      <p style={{opacity:.7}}>
+        API: <code>/api/todos</code> → proxied to <code>http://localhost:$API_PORT/todos</code>
+      </p>
     </div>
   )
 }
 JSX
 
 # -----------------------------
-# Update package.json Scripts
+# 9. Обновляем scripts в package.json
 # -----------------------------
 echo "▶ Updating package.json scripts"
-node -e '
-const fs = require("fs");
-const pkg = JSON.parse(fs.readFileSync("package.json", "utf8"));
-const apiPort = process.env.API_PORT || 3001;
+
+node <<NODE
+const fs = require('fs');
+
+const pkg = JSON.parse(fs.readFileSync('package.json', 'utf8'));
 
 pkg.scripts = {
   ...pkg.scripts,
-  "dev": "vite --open",                      // start frontend only and open browser
-  "build": "vite build",                    // production build
-  "preview": "vite preview",                // preview built app
-  "server": `json-server --watch db.json --port ${apiPort}`,
-  "dev:all": `concurrently -n web,api -c auto \"npm run dev\" \"npm run server\"`
+  "dev": "vite --open",
+  "build": "vite build",
+  "preview": "vite preview",
+  "server": "json-server --watch db.json --port $API_PORT",
+  "dev:all": "concurrently -n web,api -c auto \"npm run dev\" \"npm run server\""
 };
 
-fs.writeFileSync("package.json", JSON.stringify(pkg, null, 2));
-console.log("package.json scripts added:");
-console.log(pkg.scripts);
-'
+fs.writeFileSync('package.json', JSON.stringify(pkg, null, 2));
+console.log('New scripts:', pkg.scripts);
+NODE
 
 # -----------------------------
-# Final Instructions
+# 10. Финальное сообщение
 # -----------------------------
 cat <<TXT
 
-✅ Setup complete!
+✅ Setup complete for project: $APP_NAME
 
-Run the whole stack with:
+Запуск всего стека:
+  cd $APP_NAME
   npm run dev:all
 
-Ports in use:
-  - frontend (Vite): will be shown in terminal when you run it (e.g., http://localhost:5173)
-  - backend (json-server): http://localhost:$API_PORT
-
-After running npm run dev:all you will see both logs mixed.
-Look for a message like:
-
-  VITE  vX.X.X  ready in XXX ms
-  ➜  Local:   http://localhost:5173/
-
-and also:
-
-  [api]  JSON Server is running
-  [api]  Resources
-  [api]  http://localhost:$API_PORT/todos
-
-Examples:
-  GET  http://localhost:$API_PORT/todos
-  GET  http://localhost:5173/api/todos   (via proxy, just fetch('/api/todos') from frontend)
-
-Useful commands:
-  npm run dev       — frontend only
-  npm run server    — API only (json-server)
-  npm run build     — production build
-  npm run preview   — local preview of build
-
-Edit db.json and restart server to change mock API.
+Или отдельно:
+  npm run dev       # только фронт
+  npm run server    # только json-server (API на http://localhost:$API_PORT)
 TXT
