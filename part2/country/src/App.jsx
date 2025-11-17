@@ -8,6 +8,7 @@ import Search from "./components/Search";
 export default function App() {
   const [countries, setCountries] = useState([]);
   const [filter, setFilter] = useState("");
+
   // const [error, setError] = useState(null);
   // const [loading, setLoading] = useState(true);
 
@@ -25,7 +26,8 @@ export default function App() {
   if (filter !== "") {
     if (filtered.length > 10)
       content = <p>Too many matches, specify another filter</p>;
-    else if (filtered.length > 1) content = <CountryList filtered={filtered} />;
+    else if (filtered.length > 1)
+      content = <CountryList filtered={filtered} setFilter={setFilter} />;
     else if (filtered.length === 1)
       content = <CountryDetail country={filtered[0]} />;
   }
