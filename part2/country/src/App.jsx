@@ -3,14 +3,10 @@ import "./App.css";
 import CountryList from "./components/CountryList";
 import CountryDetail from "./components/CountryDetail";
 import Search from "./components/Search";
-// import { getTodos } from "./services/api";
 
 export default function App() {
   const [countries, setCountries] = useState([]);
   const [filter, setFilter] = useState("");
-
-  // const [error, setError] = useState(null);
-  // const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     fetch("https://studies.cs.helsinki.fi/restcountries/api/all")
