@@ -14,6 +14,8 @@ let persons = [
 // parse JSON first
 app.use(express.json());
 
+app.use(express.static("dist"));
+
 app.use(cors());
 // custom token for body
 morgan.token("body", (req) =>

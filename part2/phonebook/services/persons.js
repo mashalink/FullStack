@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost:3001/api/persons",
+  baseURL: "/api/persons",
 });
 
 export default api;
@@ -27,5 +27,3 @@ const deletePersonById = (id) => {
 };
 
 export { getPersons, createPerson, updatePerson, deletePersonById };
-
-// export default { getAll: getPersons, create: createPerson, update: updatePerson, remove: deletePerson };
