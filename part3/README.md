@@ -59,3 +59,19 @@ npm run dev
 ```
 
 Frontend runs at: http://localhost:5173
+
+## ✔️ 3.12 — Command-Line Database Script
+
+A separate CLI script **`mongo.js`** was added for working with the cloud MongoDB database.
+
+- Running with **only the password** lists all phonebook entries.
+- Running with **password + name + number** adds a new entry to the database.
+
+### Example usage
+
+```bash
+node mongo.js yourpassword
+node mongo.js yourpassword "Arto Vihavainen" 045-1232456
+```
+
+The script connects to the Atlas cluster **without storing the password in the code**.
