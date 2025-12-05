@@ -75,3 +75,38 @@ node mongo.js yourpassword "Arto Vihavainen" 045-1232456
 ```
 
 The script connects to the Atlas cluster **without storing the password in the code**.
+
+## ✔️ 3.13 — Fetch All Persons from MongoDB
+
+The `/api/persons` route has been updated to load data **directly from the MongoDB database** using the Mongoose `Person` model.
+
+```js
+app.get("/api/persons", (req, res, next) => {
+  Person.find({})
+    .then((persons) => res.json(persons))
+    .catch(next);
+});
+```
+
+The frontend continues to work normally and displays all persons stored in the database.
+
+---
+
+## ✔️ 3.14 — Save New Persons to MongoDB
+
+The POST /api/persons endpoint now stores new entries in the cloud database instead of keeping them in an in-memory array.
+
+```js
+app.post("/api/persons", (req, res, next) => {
+  const { name, number } = req.body;
+
+  const person = new Person({ name, number });
+
+  person
+    .save()
+    .then((savedPerson) => res.json(savedPerson))
+    .catch(next);
+});
+```
+
+At this stage, checking for duplicate names is not required and will be implemented in later exercises.
