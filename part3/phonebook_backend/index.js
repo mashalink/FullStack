@@ -80,14 +80,16 @@ app.post("/api/persons", (request, response, next) => {
 });
 
 const errorHandler = (error, req, res, next) => {
-  console.error(error.message);
+  console.error("ERROR:", error.name, error.message);
 
   if (error.name === "CastError") {
     return res.status(400).json({ error: "malformatted id" });
   }
 
-  return res.status(500).json({ error: "internal server error" });
+  return res.status(500).json({ error: error.message });
 };
+
+app.use(errorHandler);
 
 app.use(errorHandler);
 
