@@ -24,27 +24,20 @@ async function main() {
   try {
     await mongoose.connect(url, { family: 4 });
 
-    // Только пароль → вывести все записи
     if (process.argv.length === 3) {
       const persons = await Person.find({});
       console.log("phonebook:");
       persons.forEach((p) => {
         console.log(`${p.name} ${p.number}`);
       });
-    }
-
-    // Пароль + имя + номер → добавить запись
-    else if (process.argv.length === 5) {
+    } else if (process.argv.length === 5) {
       const name = process.argv[3];
       const number = process.argv[4];
 
       const person = new Person({ name, number });
       await person.save();
       console.log(`added ${name} number ${number} to phonebook`);
-    }
-
-    // Неправильное число аргументов
-    else {
+    } else {
       console.log("Usage:");
       console.log("  node mongo.js <password>");
       console.log('  node mongo.js <password> "<name>" <number>');

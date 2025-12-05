@@ -15,31 +15,38 @@ GET http://localhost:3001/info
 
 ############################################
 # 3.3 – Get single person (existing id)
+# 1) First run request 3.1
+# 2) Copy any "id" from the returned list
+# 3) Replace <EXISTING_ID> with that value
 ############################################
-GET http://localhost:3001/api/persons/1
+GET http://localhost:3001/api/persons/<EXISTING_ID>
 Accept: application/json
 
 ###
 
 ############################################
 # 3.3 – Get single person (non-existing id)
+# Use any valid ObjectId that does not exist in the database.
+# Example: take <EXISTING_ID> and change the last character.
 ############################################
-GET http://localhost:3001/api/persons/9999
+GET http://localhost:3001/api/persons/<NON_EXISTING_VALID_ID>
 Accept: application/json
 
 ###
 
 ############################################
 # 3.4 – Delete person (existing id)
+# Use the same <EXISTING_ID> from above.
 ############################################
-DELETE http://localhost:3001/api/persons/1
+DELETE http://localhost:3001/api/persons/<EXISTING_ID>
 
 ###
 
 ############################################
-# 3.4 – Delete person (non-existing id, 204 or 404)
+# 3.4 – Delete person (non-existing id)
+# Use the same <NON_EXISTING_VALID_ID> from above.
 ############################################
-DELETE http://localhost:3001/api/persons/9999
+DELETE http://localhost:3001/api/persons/<NON_EXISTING_VALID_ID>
 
 ###
 
@@ -85,12 +92,14 @@ Accept: application/json
 
 ############################################
 # 3.6 – Create person: duplicate name
+# Note: This returns an error only if backend validation
+# for unique names is implemented.
 ############################################
 POST http://localhost:3001/api/persons
 Content-Type: application/json
 Accept: application/json
 
 {
-  "name": "Arto Hellas",
+  "name": "Test User",
   "number": "000-0000000"
 }
