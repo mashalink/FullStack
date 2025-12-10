@@ -103,3 +103,18 @@ Accept: application/json
   "name": "Test User",
   "number": "000-0000000"
 }
+
+############################################
+# 3.17 – Update existing person (PUT)
+# 1) First, get an existing id from:
+#    GET http://localhost:3001/api/persons
+# 2) Replace <EXISTING_ID> with a real id value
+############################################
+PUT http://localhost:3001/api/persons/693187ee1f40aaa10d244376
+Content-Type: application/json
+Accept: application/json
+
+{
+  "name": "Anna",
+  "number": "999-9999995"
+}

@@ -78,6 +78,22 @@ app.post("/api/persons", (request, response, next) => {
     })
     .catch(next);
 });
+// PUT - update person
+app.put("/api/persons/:id", (request, response, next) => {
+  const { name, number } = request.body;
+
+  const updatedPerson = { name, number };
+
+  Person.findByIdAndUpdate(request.params.id, updatedPerson, { new: true })
+    .then((result) => {
+      if (result) {
+        response.json(result);
+      } else {
+        response.status(404).end();
+      }
+    })
+    .catch(next);
+});
 
 const errorHandler = (error, req, res, next) => {
   console.error("ERROR:", error.name, error.message);
@@ -91,9 +107,7 @@ const errorHandler = (error, req, res, next) => {
 
 app.use(errorHandler);
 
-app.use(errorHandler);
-
-const PORT = process.env.PORT;
+const PORT = process.env.PORT || 3001;
 app.listen(PORT, () => {
   console.log(`Server running on port ${PORT}`);
 });
