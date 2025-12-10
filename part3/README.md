@@ -110,3 +110,88 @@ app.post("/api/persons", (req, res, next) => {
 ```
 
 At this stage, checking for duplicate names is not required and will be implemented in later exercises.
+
+---
+
+## ✔️ 3.15 — Delete Persons from MongoDB
+
+The DELETE `/api/persons/:id` endpoint now removes entries directly from the database:
+
+```js
+app.delete("/api/persons/:id", (req, res, next) => {
+  Person.findByIdAndDelete(req.params.id)
+    .then(() => res.status(204).end())
+    .catch(next);
+});
+```
+
+The frontend updates correctly after a deletion.
+
+## ✔️ 3.16 — Centralized Error Handling Middleware
+
+A unified error handler was added to manage all application and Mongoose errors:
+
+```js
+const errorHandler = (error, req, res, next) => {
+  console.error("ERROR:", error.name, error.message);
+
+  if (error.name === "CastError") {
+    return res.status(400).json({ error: "malformatted id" });
+  }
+
+  return res.status(500).json({ error: error.message });
+};
+
+app.use(errorHandler);
+```
+
+All routes now use .catch(next) for clean error forwarding.
+
+## ✔️ 3.17 — Update Existing Person (PUT)
+
+The backend now supports updating an existing person’s number using HTTP PUT, enabling the frontend to replace numbers when duplicate names are detected.
+
+```js
+app.put("/api/persons/:id", (req, res, next) => {
+  const { name, number } = req.body;
+
+  Person.findByIdAndUpdate(req.params.id, { name, number }, { new: true })
+    .then((updatedPerson) => {
+      if (updatedPerson) res.json(updatedPerson);
+      else res.status(404).end();
+    })
+    .catch(next);
+});
+```
+
+## ✔️ 3.18 — Use MongoDB for /api/persons/:id and /info
+
+Get one person:
+
+```js
+app.get("/api/persons/:id", (req, res, next) => {
+  Person.findById(req.params.id)
+    .then((person) => {
+      if (person) res.json(person);
+      else res.status(404).end();
+    })
+    .catch(next);
+});
+```
+
+Info page:
+
+```js
+app.get("/info", (req, res, next) => {
+  Person.countDocuments({})
+    .then((count) => {
+      res.send(`
+        <p>Phonebook has info for ${count} people</p>
+        <p>${new Date()}</p>
+      `);
+    })
+    .catch(next);
+});
+```
+
+Both routes now reflect the live database state.
