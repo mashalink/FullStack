@@ -14,8 +14,23 @@ const url = `mongodb+srv://maria8link_db_user:${password}@cluster0.icd0xfs.mongo
 mongoose.set("strictQuery", false);
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: {
+    type: String,
+    minlength: [3, "Name must be at least 3 characters long"],
+    required: [true, "Name is required"],
+  },
+  number: {
+    type: String,
+    minlength: [8, "Number must be at least 8 characters long"],
+    required: [true, "Number is required"],
+    validate: {
+      validator: function (v) {
+        return /^\d{2,3}-\d+$/.test(v);
+      },
+      message:
+        "Number must be in the form XX-XXXXXXX or XXX-XXXXXXX (only digits and one dash)",
+    },
+  },
 });
 
 const Person = mongoose.model("Person", personSchema);
