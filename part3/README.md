@@ -195,3 +195,146 @@ app.get("/info", (req, res, next) => {
 ```
 
 Both routes now reflect the live database state.
+
+## ✔️ 3.19 — Validation: Name Min Length & Phone Number Format
+
+Server-side validation was added using **Mongoose validators**.
+
+#### Name rules:
+
+must be at least 3 characters
+
+#### Phone number rules:
+
+must be at least **8 characters**
+
+must follow the format **XX-XXXXXXX** or **XXX-XXXXXXX**
+
+Validation logic:
+
+```js
+const personSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    minlength: [3, "Name must be at least 3 characters long"],
+    required: [true, "Name is required"],
+  },
+  number: {
+    type: String,
+    minlength: [8, "Number must be at least 8 characters long"],
+    required: [true, "Number is required"],
+    validate: {
+      validator: (v) => /^\d{2,3}-\d+$/.test(v),
+      message:
+        "Number must be in the form XX-XXXXXXX or XXX-XXXXXXX (only digits and one dash)",
+    },
+  },
+});
+```
+
+If validation fails, the backend responds:
+
+```js
+{ "error": "Number must be in the form XX-XXXXXXX..." }
+```
+
+The frontend logs validation errors using:
+
+```js
+.catch(error => console.log(error.response.data.error));
+```
+
+## ✔️ 3.20 — Enable Validation for Updates (PUT)
+
+Mongoose does **not** run validators on updates by default.
+Validation was enabled using runValidators: true and context: "query":
+
+```js
+app.put("/api/persons/:id", (req, res, next) => {
+  const { name, number } = req.body;
+
+  Person.findByIdAndUpdate(
+    req.params.id,
+    { name, number },
+    {
+      new: true,
+      runValidators: true,
+      context: "query",
+    }
+  )
+    .then((updatedPerson) => {
+      if (updatedPerson) res.json(updatedPerson);
+      else res.status(404).end();
+    })
+    .catch(next);
+});
+```
+
+PUT requests now obey all validation rules (name length, phone format, etc.).
+
+## ✔️ 3.21 — Production Deployment with Updated Frontend Build
+
+A new production build of the frontend was created and copied into the backend using:
+
+```js
+npm run build:ui
+```
+
+This script removes the old dist folder, builds the frontend, and copies the new dist into the backend.
+
+The backend serves the production UI:
+
+```js
+app.use(express.static("dist"));
+```
+
+Deployment to Render was completed and verified:
+
+- App works from: https://fullstack-9acg.onrender.com/
+
+- API works from: **/api/persons**
+
+- PUT, POST, DELETE all function correctly
+
+- Validation errors appear properly both in backend and frontend
+
+## ✔️ 3.22 — ESLint added and backend code cleaned up
+
+The backend now uses ESLint to enforce consistent formatting and catch common issues.
+
+**Installed:**
+
+```bash
+npm install --save-dev eslint @eslint/js @stylistic/eslint-plugin globals
+```
+**Added** eslint.config.mjs:
+```js
+import globals from 'globals'
+import js from '@eslint/js'
+import stylisticJs from '@stylistic/eslint-plugin'
+
+export default [
+  js.configs.recommended,
+  {
+    files: ['**/*.js'],
+    languageOptions: {
+      sourceType: 'commonjs',
+      globals: { ...globals.node },
+      ecmaVersion: 'latest',
+    },
+    plugins: { '@stylistic/js': stylisticJs },
+    rules: {
+      '@stylistic/js/indent': ['error', 2],
+      '@stylistic/js/quotes': ['error', 'single'],
+      '@stylistic/js/semi': ['error', 'never'],
+      'no-console': 'off',
+    },
+  },
+  { ignores: ['dist/**'] },
+]
+```
+**Lint script added:**
+```bash
+"lint": "eslint ."
+```
+All lint errors were fixed, completing exercise 3.22.
