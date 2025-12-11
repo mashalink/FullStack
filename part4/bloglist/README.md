@@ -42,3 +42,35 @@ app.js
 index.js
 ```
 All functionality works the same after refactoring.
+
+### 4.3 - 4.7 - Helper Functions + Unit Tests
+Created a helper module:
+```bash
+utils/list_helper.js
+```
+#### Implemented functions
+| Function      | Description     |
+|:---|:---|
+| dummy() |Always returns 1| 
+| totalLikes()	| Sums likes of all blogs| 
+| favoriteBlog()| 	Returns the blog with most likes| 
+| mostBlogs()	| Returns author with most blog posts| 
+| mostLikes()	| Returns author whose blogs have most total likes |
+
+#### Test location
+```bash
+tests/dummy.test.js
+tests/total_likes.test.js
+tests/favorite_blog.test.js
+tests/most_blogs.test.js
+tests/most_likes.test.js
+```
+#### Test runner
+
+Using **node:test** via:
+```json
+"scripts": {
+  "test": "node --test"
+}
+```
+All tests pass successfully.
