@@ -1,4 +1,4 @@
-# Part 3 — Phonebook Backend (Exercises 3.1–3.11)
+# Part 3 — Phonebook Backend
 
 This folder contains the backend implementation for **Full Stack Open Part 3: Phonebook**.  
 The backend is built with **Node.js**, **Express**, and also serves the production build of the frontend.
