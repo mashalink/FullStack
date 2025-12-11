@@ -22,23 +22,18 @@ The course covers modern full-stack development using:
 - **Part 0:** Fundamentals of Web Apps
 - **Part 1:** Introduction to React
 - **Part 2:** Communicating with Server
-
-### 🚧 In Progress
-
 - **Part 3:** Programming a Server with NodeJS and Express
+    *  Backend deployed on Render
+    * 🔗 **Live API:**  
+https://fullstack-9acg.onrender.com/
 
 ---
 
-#### Part 3 — Online Application
-
-##### ✔️ Backend deployed on Render
-
-🔗 **Live API:**  
-https://fullstack-9acg.onrender.com/
-
-### Upcoming Course Parts
+### 🚧 In Progress
 
 - Part 4: Testing Express servers, user administration
+
+### Upcoming Course Parts
 
 - Part 5: Testing React apps
 
