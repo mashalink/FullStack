@@ -74,3 +74,31 @@ Using **node:test** via:
 }
 ```
 All tests pass successfully.
+
+### 4.8 - 4.12 - Blog API Tests (SuperTest)
+
+Added **integration tests** for the blog backend using **SuperTest** and `node:test`.
+
+#### Implemented tests
+- **GET /api/blogs**
+  - returns blogs as JSON
+  - returns correct number of blogs
+  - blog objects contain `id` field instead of `_id`
+- **POST /api/blogs**
+  - a valid blog can be added
+  - if `likes` is missing, it defaults to `0`
+  - missing `title` or `url` results in **400 Bad Request**
+
+#### Test setup
+- Test database selected via `NODE_ENV=test`
+- Database cleared and seeded before each test using `beforeEach`
+- Logging disabled during tests
+
+#### Test location
+```bash
+tests/blog_api.test.js
+```
+#### Run test
+```bash
+npm test
+```
