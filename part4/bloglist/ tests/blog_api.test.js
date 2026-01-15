@@ -4,34 +4,15 @@ const mongoose = require('mongoose')
 const supertest = require('supertest')
 const app = require('../app')
 const Blog = require('../models/blog')
-
+const helper = require('./test_helper')
 const api = supertest(app)
 
-const initialBlogs = [
-      {
-    title: 'Ponchik learns testing',
-    author: 'Ponchik',
-    url: 'https://example.com/ponchik',
-    likes: 7,
-  },
-  {
-    title: 'Bulochka writes clean code',
-    author: 'Bulochka',
-    url: 'https://example.com/bulochka',
-    likes: 12,
-  },
-  {
-    title: 'Bublik and the mysteries of MongoDB',
-    author: 'Bublik',
-    url: 'https://example.com/bublik',
-    likes: 5,
-  },
-]
+const { initialBlogs } = helper
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  await Blog.insertMany(initialBlogs)
-})  
+  await Blog.insertMany(helper.initialBlogs)
+})
 
 test('blogs are returned as json', async () => {
   await api
@@ -120,6 +101,57 @@ test('blog without url is not added', async () => {
 
   const response = await api.get('/api/blogs')
   assert.strictEqual(response.body.length, initialBlogs.length)
+})
+
+test('a blog can be deleted', async () => {
+  const blogsAtStart = await api.get('/api/blogs')
+  const blogToDelete = blogsAtStart.body[0]
+
+  await api
+    .delete(`/api/blogs/${blogToDelete.id}`)
+    .expect(204)
+
+  const blogsAtEnd = await api.get('/api/blogs')
+
+  assert.strictEqual(blogsAtEnd.body.length, initialBlogs.length - 1)
+
+  const titles = blogsAtEnd.body.map(r => r.title)
+  assert(!titles.includes(blogToDelete.title))
+})
+
+test('likes of a blog can be updated', async () => {
+  const blogsAtStart = await helper.blogsInDb()
+  const blogToUpdate = blogsAtStart[0]
+
+  const updatedData = {
+    likes: blogToUpdate.likes + 1,
+  }
+
+  const response = await api
+    .put(`/api/blogs/${blogToUpdate.id}`)
+    .send(updatedData)
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  assert.strictEqual(response.body.likes, blogToUpdate.likes + 1)
+})
+
+test('blog can be fully updated', async () => {
+  const blog = (await helper.blogsInDb())[0]
+
+  const updated = {
+    title: 'Updated title',
+    author: 'Updated author',
+    url: 'https://updated.example.com',
+    likes: 42,
+  }
+
+  const response = await api
+    .put(`/api/blogs/${blog.id}`)
+    .send(updated)
+    .expect(200)
+
+  assert.strictEqual(response.body.title, updated.title)
 })
 
 after(async () => {
