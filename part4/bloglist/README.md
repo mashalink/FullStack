@@ -73,6 +73,11 @@ Using **node:test** via:
   "test": "node --test"
 }
 ```
+
+Run test
+```bash
+npm test
+```
 All tests pass successfully.
 
 ### 4.8 - 4.12 - Blog API Tests (SuperTest)
@@ -94,11 +99,42 @@ Added **integration tests** for the blog backend using **SuperTest** and `node:t
 - Database cleared and seeded before each test using `beforeEach`
 - Logging disabled during tests
 
-#### Test location
+Test location
 ```bash
 tests/blog_api.test.js
 ```
-#### Run test
+Run test
 ```bash
 npm test
 ```
+
+### 4.13–4.14 — Blog Deletion and Update
+
+Implemented RESTful endpoints for modifying existing blog posts.
+
+#### Added functionality
+- **DELETE /api/blogs/:id**
+  - Deletes a single blog post
+  - Returns status `204 No Content`
+
+- **PUT /api/blogs/:id**
+  - Updates an existing blog post
+  - Supports updating likes and other fields
+  - Returns the updated blog
+
+#### Tests
+- Verified that a blog can be deleted
+- Verified that blog likes can be updated
+- Added one update-related integration test using Supertest
+
+All tests pass successfully.
+
+Test location
+```bash
+tests/blog_api.test.js
+```
+Run test
+```bash
+npm test
+```
+
