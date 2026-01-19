@@ -5,13 +5,24 @@ const supertest = require('supertest')
 
 const app = require('../app')
 const Blog = require('../models/blog')
+const User = require('../models/user')
+const bcrypt = require('bcrypt')
 const helper = require('./test_helper')
 
 const api = supertest(app)
 
 beforeEach(async () => {
   await Blog.deleteMany({})
-  await Blog.insertMany(helper.initialBlogs)
+  await User.deleteMany({})
+
+  const passwordHash = await bcrypt.hash('secretpass', 10)
+  const user = await new User({ username: 'ponchik', name: 'Ponchik', passwordHash }).save()
+
+  const blogsWithUser = helper.initialBlogs.map(b => ({ ...b, user: user._id }))
+  const savedBlogs = await Blog.insertMany(blogsWithUser)
+
+  user.blogs = savedBlogs.map(b => b._id)
+  await user.save()
 })
 
 describe('GET /api/blogs', () => {
@@ -177,6 +188,39 @@ describe('PUT /api/blogs/:id', () => {
     .expect(404)
 })
 })
+
+describe('blog-user relationship (4.17)', () => {
+  test('blogs returned by /api/blogs contain user info', async () => {
+    const response = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const blog = response.body[0]
+    assert(blog.user)
+    assert(blog.user.username)
+    assert(blog.user.id)
+  })
+
+  test('creating a blog sets a creator user', async () => {
+    const newBlog = {
+      title: 'Bublik accidentally becomes an author',
+      author: 'Bublik',
+      url: 'https://example.com/bublik-author',
+      likes: 3,
+    }
+
+    const created = await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    assert(created.body.user)
+    assert(created.body.user.id)
+  })
+})
+
 
 after(async () => {
   await mongoose.connection.close()

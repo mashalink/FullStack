@@ -135,6 +135,19 @@ describe('user creation', () => {
   })
 })
 
+describe('users with blogs (4.17)', () => {
+  test('users returned by /api/users contain blogs array', async () => {
+    const response = await api
+      .get('/api/users')
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    const user = response.body[0]
+    assert(user.blogs)
+    assert(Array.isArray(user.blogs))
+  })
+})
+
 after(async () => {
   await mongoose.connection.close()
 })
