@@ -1,0 +1,80 @@
+const { test, describe, beforeEach, after } = require('node:test')
+const assert = require('node:assert')
+const mongoose = require('mongoose')
+const supertest = require('supertest')
+const bcrypt = require('bcrypt')
+
+const app = require('../app')
+const User = require('../models/user')
+const helper = require('./test_helper')
+
+const api = supertest(app)
+
+
+describe('user creation', () => {
+    beforeEach(async () => {
+        await User.deleteMany({})
+
+        const passwordHashes = await Promise.all(
+            helper.initialUsers.map(async (user) => {
+            const passwordHash = await bcrypt.hash(user.password, 10)
+            return {
+                username: user.username,
+                name: user.name,
+                passwordHash,
+            }
+            })
+        )
+
+        await User.insertMany(passwordHashes)
+    })
+
+    test('a valid user can be created', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+        username: 'ponchik',
+        name: 'Ponchik',
+        password: 'secretpass',
+        }
+
+        const response = await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(201)
+        .expect('Content-Type', /application\/json/)
+
+        // passwordHash MUST NOT be returned
+        assert.strictEqual(response.body.passwordHash, undefined)
+        assert.strictEqual(response.body.password, undefined)
+
+        const usersAtEnd = await helper.usersInDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
+
+        const usernames = usersAtEnd.map((u) => u.username)
+        assert(usernames.includes('ponchik'))
+    })
+
+    test('user without password is not created', async () => {
+        const usersAtStart = await helper.usersInDb()
+
+        const newUser = {
+        username: 'bulochka',
+        name: 'Bulochka',
+        // password missing
+        }
+
+        await api
+        .post('/api/users')
+        .send(newUser)
+        .expect(400)
+        .expect('Content-Type', /application\/json/)
+
+        const usersAtEnd = await helper.usersInDb()
+        assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+    })
+})
+
+after(async () => {
+  await mongoose.connection.close()
+})

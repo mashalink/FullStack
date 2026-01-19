@@ -160,6 +160,22 @@ describe('PUT /api/blogs/:id', () => {
     assert.strictEqual(response.body.url, updated.url)
     assert.strictEqual(response.body.likes, updated.likes)
   })
+
+  test('updating a non-existing blog returns 404', async () => {
+  const nonExistingId = await helper.nonExistingId()
+
+  const updatedData = {
+    title: 'This will not be saved',
+    author: 'Ghost',
+    url: 'https://ghost.example.com',
+    likes: 0,
+  }
+
+  await api
+    .put(`/api/blogs/${nonExistingId}`)
+    .send(updatedData)
+    .expect(404)
+})
 })
 
 after(async () => {

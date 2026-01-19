@@ -138,3 +138,43 @@ Run test
 npm test
 ```
 
+### 4.15 — Users API
+
+Implemented basic user management with secure password handling.
+
+#### Added functionality
+- **POST /api/users**
+  - Creates a new user with username, name, and password
+  - Passwords are hashed using bcrypt
+  - Plain passwords and passwordHash are never returned in responses
+  - Missing password results in 400 Bad Request
+- **GET /api/users**
+  - Returns all users
+  - Does not expose password hashes
+
+#### User model
+- username (required)
+- name
+- passwordHash (required, stored hashed)
+
+#### Tests
+- User can be created with valid data
+- User creation fails if password is missing
+- Password hash is not included in API responses
+
+#### Test setup
+- Users collection cleared before each test
+- Initial users seeded with hashed passwords
+
+Test location
+```bash
+tests/user_api.test.js
+```
+
+Run tests
+```bash
+npm test
+```
+
+All tests pass successfully.
+
