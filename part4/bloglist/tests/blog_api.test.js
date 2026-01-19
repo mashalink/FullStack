@@ -9,7 +9,10 @@ const User = require('../models/user')
 const bcrypt = require('bcrypt')
 const helper = require('./test_helper')
 
+process.env.SECRET = process.env.SECRET || 'testsecret'
+
 const api = supertest(app)
+let authToken
 
 beforeEach(async () => {
   await Blog.deleteMany({})
@@ -17,6 +20,14 @@ beforeEach(async () => {
 
   const passwordHash = await bcrypt.hash('secretpass', 10)
   const user = await new User({ username: 'ponchik', name: 'Ponchik', passwordHash }).save()
+
+  const loginResponse = await api
+    .post('/api/login')
+    .send({ username: 'ponchik', password: 'secretpass' })
+    .expect(200)
+    .expect('Content-Type', /application\/json/)
+
+  authToken = loginResponse.body.token
 
   const blogsWithUser = helper.initialBlogs.map(b => ({ ...b, user: user._id }))
   const savedBlogs = await Blog.insertMany(blogsWithUser)
@@ -55,6 +66,7 @@ describe('POST /api/blogs', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${authToken}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -75,6 +87,7 @@ describe('POST /api/blogs', () => {
 
     const response = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${authToken}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -91,6 +104,7 @@ describe('POST /api/blogs', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${authToken}`)
       .send(newBlog)
       .expect(400)
 
@@ -107,6 +121,7 @@ describe('POST /api/blogs', () => {
 
     await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${authToken}`)
       .send(newBlog)
       .expect(400)
 
@@ -212,6 +227,7 @@ describe('blog-user relationship (4.17)', () => {
 
     const created = await api
       .post('/api/blogs')
+      .set('Authorization', `Bearer ${authToken}`)
       .send(newBlog)
       .expect(201)
       .expect('Content-Type', /application\/json/)
@@ -221,6 +237,76 @@ describe('blog-user relationship (4.17)', () => {
   })
 })
 
+describe('blog creation with token', () => {
+  beforeEach(async () => {
+    await Blog.deleteMany({})
+    await User.deleteMany({})
+
+    const passwordHash = await bcrypt.hash('secretpass', 10)
+
+    await User.create({
+      username: 'ponchik',
+      name: 'Ponchik',
+      passwordHash,
+    })
+  })
+
+  const loginAndGetToken = async () => {
+    const response = await api
+      .post('/api/login')
+      .send({ username: 'ponchik', password: 'secretpass' })
+      .expect(200)
+      .expect('Content-Type', /application\/json/)
+
+    return response.body.token
+  }
+
+  test('login returns a token', async () => {
+    const token = await loginAndGetToken()
+    assert(token)
+  })
+
+  test('creating a blog fails with 401 if token is missing', async () => {
+    const newBlog = {
+      title: 'Ponchik forgets the token',
+      author: 'Ponchik',
+      url: 'https://example.com/ponchik',
+      likes: 1,
+    }
+
+    await api
+      .post('/api/blogs')
+      .send(newBlog)
+      .expect(401)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, 0)
+  })
+
+  test('a blog can be created with a valid token', async () => {
+    const token = await loginAndGetToken()
+
+    const newBlog = {
+      title: 'Ponchik finally uses tokens',
+      author: 'Ponchik',
+      url: 'https://example.com/ponchik-token',
+      likes: 7,
+    }
+
+    await api
+      .post('/api/blogs')
+      .set('Authorization', `Bearer ${token}`)
+      .send(newBlog)
+      .expect(201)
+      .expect('Content-Type', /application\/json/)
+
+    const blogsAtEnd = await helper.blogsInDb()
+    assert.strictEqual(blogsAtEnd.length, 1)
+
+    const titles = blogsAtEnd.map(b => b.title)
+    assert(titles.includes('Ponchik finally uses tokens'))
+  })
+})
 
 after(async () => {
   await mongoose.connection.close()
