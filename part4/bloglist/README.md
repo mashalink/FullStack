@@ -1,27 +1,65 @@
 # Part 4 — Bloglist Backend
 
-### 4.1 Bloglist Setup
-Created a new Express + MongoDB backend.
+Express + MongoDB backend for managing blogs and users (Full Stack Open, Part 4). Includes CRUD endpoints, validation, and unit/integration tests with `node:test` and SuperTest.
 
-#### Includes
-- Express server
-- Mongoose connection
-- Environment variables (`dotenv`)
-- Routes:
-  - GET /api/blogs — return all blogs
-  - POST /api/blogs — create a blog
+## Stack
+- Node.js + Express
+- MongoDB + Mongoose
+- dotenv for environment variables
+- bcrypt for password hashing
+- node:test + SuperTest for testing
 
-#### Run locally
+## Project structure
+```
+app.js
+index.js
+controllers/
+  blogs.js
+  users.js
+models/
+  blog.js
+  user.js
+utils/
+  config.js
+  logger.js
+  middleware.js
+  list_helper.js
+tests/
+  blog_api.test.js
+  user_api.test.js
+  dummy.test.js
+  favorite_blog.test.js
+  most_blogs.test.js
+  most_likes.test.js
+  total_likes.test.js
+```
+
+## Getting started
 ```bash
 npm install
-npm run dev
 ```
-#### .env:
-``` ini
+
+Create `.env` in the project root:
+```ini
 MONGODB_URI=your_mongo_url
 PORT=3003
 ```
-``` json
+
+Run the dev server:
+```bash
+npm run dev
+```
+
+## API overview
+- `GET /api/blogs` — list all blogs
+- `POST /api/blogs` — create a blog; `likes` defaults to `0` when omitted
+- `PUT /api/blogs/:id` — update an existing blog (e.g., likes)
+- `DELETE /api/blogs/:id` — remove a blog
+- `GET /api/users` — list users (sensitive fields omitted)
+- `POST /api/users` — create a user with validation (unique `username`, min length 3; passwords hashed with bcrypt)
+
+Sample blog payload:
+```json
 {
   "title": "First test blog",
   "author": "Bulka",
@@ -29,152 +67,20 @@ PORT=3003
   "likes": 5
 }
 ```
-### 4.2 Refactoring
 
-Code reorganized into modules:
-``` bach
-controllers/blogs.js
-models/blog.js
-utils/config.js
-utils/logger.js
-utils/middleware.js
-app.js
-index.js
-```
-All functionality works the same after refactoring.
+## Testing
+- Unit tests for helper functions (`utils/list_helper.js`)
+- Integration tests for blog and user APIs (SuperTest)
 
-### 4.3 - 4.7 - Helper Functions + Unit Tests
-Created a helper module:
-```bash
-utils/list_helper.js
-```
-#### Implemented functions
-| Function      | Description     |
-|:---|:---|
-| dummy() |Always returns 1| 
-| totalLikes()	| Sums likes of all blogs| 
-| favoriteBlog()| 	Returns the blog with most likes| 
-| mostBlogs()	| Returns author with most blog posts| 
-| mostLikes()	| Returns author whose blogs have most total likes |
-
-#### Test location
-```bash
-tests/dummy.test.js
-tests/total_likes.test.js
-tests/favorite_blog.test.js
-tests/most_blogs.test.js
-tests/most_likes.test.js
-```
-#### Test runner
-
-Using **node:test** via:
-```json
-"scripts": {
-  "test": "node --test"
-}
-```
-
-Run test
-```bash
-npm test
-```
-All tests pass successfully.
-
-### 4.8 - 4.12 - Blog API Tests (SuperTest)
-
-Added **integration tests** for the blog backend using **SuperTest** and `node:test`.
-
-#### Implemented tests
-- **GET /api/blogs**
-  - returns blogs as JSON
-  - returns correct number of blogs
-  - blog objects contain `id` field instead of `_id`
-- **POST /api/blogs**
-  - a valid blog can be added
-  - if `likes` is missing, it defaults to `0`
-  - missing `title` or `url` results in **400 Bad Request**
-
-#### Test setup
-- Test database selected via `NODE_ENV=test`
-- Database cleared and seeded before each test using `beforeEach`
-- Logging disabled during tests
-
-Test location
-```bash
-tests/blog_api.test.js
-```
-Run test
+Run all tests:
 ```bash
 npm test
 ```
 
-### 4.13–4.14 — Blog Deletion and Update
-
-Implemented RESTful endpoints for modifying existing blog posts.
-
-#### Added functionality
-- **DELETE /api/blogs/:id**
-  - Deletes a single blog post
-  - Returns status `204 No Content`
-
-- **PUT /api/blogs/:id**
-  - Updates an existing blog post
-  - Supports updating likes and other fields
-  - Returns the updated blog
-
-#### Tests
-- Verified that a blog can be deleted
-- Verified that blog likes can be updated
-- Added one update-related integration test using Supertest
-
-All tests pass successfully.
-
-Test location
+Run a specific suite:
 ```bash
-tests/blog_api.test.js
-```
-Run test
-```bash
-npm test
+npm test -- tests/blog_api.test.js
+npm test -- tests/user_api.test.js
 ```
 
-### 4.15 — Users API
-
-Implemented basic user management with secure password handling.
-
-#### Added functionality
-- **POST /api/users**
-  - Creates a new user with username, name, and password
-  - Passwords are hashed using bcrypt
-  - Plain passwords and passwordHash are never returned in responses
-  - Missing password results in 400 Bad Request
-- **GET /api/users**
-  - Returns all users
-  - Does not expose password hashes
-
-#### User model
-- username (required)
-- name
-- passwordHash (required, stored hashed)
-
-#### Tests
-- User can be created with valid data
-- User creation fails if password is missing
-- Password hash is not included in API responses
-
-#### Test setup
-- Users collection cleared before each test
-- Initial users seeded with hashed passwords
-
-Test location
-```bash
-tests/user_api.test.js
-```
-
-Run tests
-```bash
-npm test
-```
-
-All tests pass successfully.
 

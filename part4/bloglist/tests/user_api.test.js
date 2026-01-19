@@ -33,8 +33,8 @@ describe('user creation', () => {
         const usersAtStart = await helper.usersInDb()
 
         const newUser = {
-        username: 'ponchik',
-        name: 'Ponchik',
+        username: 'waffle',
+        name: 'Waffle',
         password: 'secretpass',
         }
 
@@ -43,7 +43,7 @@ describe('user creation', () => {
         .send(newUser)
         .expect(201)
         .expect('Content-Type', /application\/json/)
-
+        
         // passwordHash MUST NOT be returned
         assert.strictEqual(response.body.passwordHash, undefined)
         assert.strictEqual(response.body.password, undefined)
@@ -52,7 +52,7 @@ describe('user creation', () => {
         assert.strictEqual(usersAtEnd.length, usersAtStart.length + 1)
 
         const usernames = usersAtEnd.map((u) => u.username)
-        assert(usernames.includes('ponchik'))
+        assert(usernames.includes('waffle'))
     })
 
     test('user without password is not created', async () => {
@@ -73,6 +73,66 @@ describe('user creation', () => {
         const usersAtEnd = await helper.usersInDb()
         assert.strictEqual(usersAtEnd.length, usersAtStart.length)
     })
+
+    test('username shorter than 3 chars is rejected', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'ab',
+      name: 'TooShort',
+      password: 'secretpass',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    assert(response.body.error)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+  test('password shorter than 3 chars is rejected', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: 'bublik',
+      name: 'Bublik',
+      password: 'no',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    assert(response.body.error)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
+
+   test('username must be unique', async () => {
+    const usersAtStart = await helper.usersInDb()
+
+    const newUser = {
+      username: helper.initialUsers[0].username, // ponchik
+      name: 'Imposter',
+      password: 'secretpass',
+    }
+
+    const response = await api
+      .post('/api/users')
+      .send(newUser)
+      .expect(400)
+
+    assert(response.body.error)
+
+    const usersAtEnd = await helper.usersInDb()
+    assert.strictEqual(usersAtEnd.length, usersAtStart.length)
+  })
 })
 
 after(async () => {
