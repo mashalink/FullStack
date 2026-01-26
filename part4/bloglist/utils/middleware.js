@@ -29,7 +29,7 @@ const errorHandler = (error, request, response, next) => {
     return response.status(400).json({ error: 'username must be unique' })
   }
   
-  return response.status(500).json({ error: 'internal server error' })
+  return next(error)
 }
 
 const tokenExtractor = (request, response, next) => {
