@@ -26,16 +26,15 @@ The course covers modern full-stack development using:
     *  Backend deployed on Render
     * 🔗 **Live API:**  
 https://fullstack-9acg.onrender.com/
+- **Part 4:** Testing Express servers, user administration
 
 ---
 
 ### 🚧 In Progress
 
-- Part 4: Testing Express servers, user administration
+- Part 5: Testing React apps
 
 ### Upcoming Course Parts
-
-- Part 5: Testing React apps
 
 - Part 6: Advanced state management
 
