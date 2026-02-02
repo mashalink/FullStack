@@ -9,15 +9,7 @@ import loginService from './services/login'
 
 const STORAGE_KEY = 'loggedBlogappUser'
 
-
-
-
 const App = () => {
-  const [blogs, setBlogs] = useState([])
-  const [notification, setNotification] = useState(null)
-
-  const [username, setUsername] = useState('')
-  const [password, setPassword] = useState('')
   const [user, setUser] = useState(null)
 
   useEffect(() => {
@@ -29,23 +21,31 @@ const App = () => {
     }
   }, [])
 
-  const blogFormRef = useRef()
-
-  
+  const [notification, setNotification] = useState(null)
   const notificationTimeoutRef = useRef(null)
-  const notify = (message, type = 'info', seconds = 5) => {
-  setNotification({ message, type })
 
-  if (notificationTimeoutRef.current) {
-    clearTimeout(notificationTimeoutRef.current)
+  useEffect(() => {
+    return () => {
+      if (notificationTimeoutRef.current) clearTimeout(notificationTimeoutRef.current)
+    }
+  }, [])
+
+  const notify = (message, type = 'info', seconds = 5) => {
+    setNotification({ message, type })
+
+    if (notificationTimeoutRef.current) {
+      clearTimeout(notificationTimeoutRef.current)
+    }
+
+    notificationTimeoutRef.current = setTimeout(() => {
+      setNotification(null)
+      notificationTimeoutRef.current = null
+    }, seconds * 1000)
   }
 
-  notificationTimeoutRef.current = setTimeout(() => {
-    setNotification(null)
-    notificationTimeoutRef.current = null
-  }, seconds * 1000)
-}
-
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
+  
   const handleLogin = async ({ username, password }) => {
     try {
       const loggedInUser = await loginService.login({ username, password })
@@ -59,7 +59,7 @@ const App = () => {
       notify('wrong credentials', 'error')
     }
   }
-
+  
   const handleLogout = () => {
     window.localStorage.removeItem(STORAGE_KEY)
     setUser(null)
@@ -68,6 +68,8 @@ const App = () => {
     blogService.setToken(null)
     notify('logged out', 'info')
   }
+  
+  const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
     const fetchBlogs = async () => {
@@ -77,12 +79,14 @@ const App = () => {
     fetchBlogs()
   }, [])
 
+  const blogFormRef = useRef()
+
   const addBlog = async (blogObject) => {
     try {
     const returnedBlog = await blogService.create(blogObject)
-    setBlogs(blogs.concat(returnedBlog))
+    setBlogs(prev => prev.concat(returnedBlog))
     notify(`a new blog "${returnedBlog.title}" by ${returnedBlog.author} added`, 'info')
-    blogFormRef.current.toggleVisibility()
+    blogFormRef.current?.toggleVisibility()
     }
     catch (exception) {
       console.log(exception)
