@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
@@ -7,6 +7,9 @@ import blogService from './services/blogs'
 import loginService from './services/login'
 
 const STORAGE_KEY = 'loggedBlogappUser'
+
+
+
 
 const App = () => {
   const [blogs, setBlogs] = useState([])
@@ -25,6 +28,20 @@ const App = () => {
     }
   }, [])
 
+  const notificationTimeoutRef = useRef(null)
+  const notify = (message, type = 'info', seconds = 5) => {
+  setNotification({ message, type })
+
+  if (notificationTimeoutRef.current) {
+    clearTimeout(notificationTimeoutRef.current)
+  }
+
+  notificationTimeoutRef.current = setTimeout(() => {
+    setNotification(null)
+    notificationTimeoutRef.current = null
+  }, seconds * 1000)
+}
+
   const handleLogin = async ({ username, password }) => {
     try {
       const loggedInUser = await loginService.login({ username, password })
@@ -33,11 +50,9 @@ const App = () => {
       window.localStorage.setItem(STORAGE_KEY, JSON.stringify(loggedInUser))
       setUsername('')
       setPassword('')
-      setNotification({ type: 'info', message: 'login successful' })
-      setTimeout(() => setNotification(null), 5000)
+      notify(`welcome back ${loggedInUser.name}`, 'info')
     } catch {
-      setNotification({ type: 'error', message: 'wrong credentials' })
-      setTimeout(() => setNotification(null), 5000)
+      notify('wrong credentials', 'error')
     }
   }
 
@@ -47,8 +62,7 @@ const App = () => {
     setUsername('')
     setPassword('')
     blogService.setToken(null)
-    setNotification({ type: 'info', message: 'logged out' })
-    setTimeout(() => setNotification(null), 5000)
+    notify('logged out', 'info')
   }
 
   useEffect(() => {
@@ -60,11 +74,16 @@ const App = () => {
   }, [])
 
   const addBlog = async (blogObject) => {
+    try {
     const returnedBlog = await blogService.create(blogObject)
     setBlogs(blogs.concat(returnedBlog))
-    setNotification({ type: 'info', message: `a new blog "${returnedBlog.title}" by ${returnedBlog.author} added` })
-    setTimeout(() => setNotification(null), 5000)
-  }
+    notify(`a new blog "${returnedBlog.title}" by ${returnedBlog.author} added`, 'info')
+    }
+    catch (exception) {
+      console.log(exception)
+      notify('error creating blog', 'error')
+    }
+  } 
 
   if (user === null) {
     return (
