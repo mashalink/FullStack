@@ -3,6 +3,7 @@ import Blog from './components/Blog'
 import LoginForm from './components/LoginForm'
 import BlogForm from './components/BlogForm'
 import Notification from './components/Notification'
+import Togglable from './components/Togglable'
 import blogService from './services/blogs'
 import loginService from './services/login'
 
@@ -28,6 +29,9 @@ const App = () => {
     }
   }, [])
 
+  const blogFormRef = useRef()
+
+  
   const notificationTimeoutRef = useRef(null)
   const notify = (message, type = 'info', seconds = 5) => {
   setNotification({ message, type })
@@ -78,6 +82,7 @@ const App = () => {
     const returnedBlog = await blogService.create(blogObject)
     setBlogs(blogs.concat(returnedBlog))
     notify(`a new blog "${returnedBlog.title}" by ${returnedBlog.author} added`, 'info')
+    blogFormRef.current.toggleVisibility()
     }
     catch (exception) {
       console.log(exception)
@@ -109,7 +114,10 @@ const App = () => {
             logout
           </button>
       </div>
-      <BlogForm createBlog={addBlog} />
+      <br />
+      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
+        <BlogForm createBlog={addBlog} />
+      </Togglable>
       <br />
       {blogs.map((blog) => (
         <Blog key={blog.id} blog={blog} />
