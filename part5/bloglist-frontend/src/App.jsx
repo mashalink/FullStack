@@ -94,6 +94,32 @@ const App = () => {
     }
   } 
 
+  const likeBlog = async (blog) => {
+    try {
+      const userIdOrObj = blog.user?.id ?? blog.user ?? null
+
+      const updatedObject = {
+        likes: blog.likes + 1,
+        author: blog.author,
+        title: blog.title,
+        url: blog.url,
+        ...(userIdOrObj ? { user: userIdOrObj } : {}), // if user is null/undefined, don't include it
+      }
+
+      const returned = await blogService.update(blog.id, updatedObject)
+      
+      setBlogs(prev =>
+        prev.map(b => (b.id === blog.id ? returned : b))
+      )
+
+      notify(`you liked "${blog.title}"`, 'info')
+    } catch (exception) {
+      console.log(exception)
+      notify('failed to like blog', 'error')
+    }
+}
+
+
   if (user === null) {
     return (
       <div>
@@ -123,8 +149,8 @@ const App = () => {
         <BlogForm createBlog={addBlog} />
       </Togglable>
       <br />
-      {blogs.map((blog) => (
-        <Blog key={blog.id} blog={blog} />
+      {blogs.map(blog => (
+        <Blog key={blog.id} blog={blog} onLike={() => likeBlog(blog)} />
       ))}
     </div>
   )
