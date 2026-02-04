@@ -10,14 +10,14 @@ const getStyles = (type) => {
     borderRadius: '4px',
     marginBottom: '1rem',
     fontWeight: 600,
-    }
   }
+}
 
-  const Notification = ({ notification }) => {
-    if (!notification?.message) return null
+const Notification = ({ notification }) => {
+  if (!notification?.message) return null
 
-    const { message, type = 'info' } = notification
-    return <div style={getStyles(type)}>{message}</div>
-  }
+  const { message, type = 'info' } = notification
+  return <div style={getStyles(type)}>{message}</div>
+}
 
 export default Notification

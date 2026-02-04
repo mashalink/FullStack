@@ -45,7 +45,7 @@ const App = () => {
 
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
-  
+
   const handleLogin = async ({ username, password }) => {
     try {
       const loggedInUser = await loginService.login({ username, password })
@@ -55,11 +55,12 @@ const App = () => {
       setUsername('')
       setPassword('')
       notify(`welcome back ${loggedInUser.name}`, 'info')
-    } catch {
+    } catch (exception) {
+      console.log(exception)
       notify('wrong credentials', 'error')
     }
   }
-  
+
   const handleLogout = () => {
     window.localStorage.removeItem(STORAGE_KEY)
     setUser(null)
@@ -68,7 +69,7 @@ const App = () => {
     blogService.setToken(null)
     notify('logged out', 'info')
   }
-  
+
   const [blogs, setBlogs] = useState([])
 
   useEffect(() => {
@@ -83,16 +84,16 @@ const App = () => {
 
   const addBlog = async (blogObject) => {
     try {
-    const returnedBlog = await blogService.create(blogObject)
-    setBlogs(prev => prev.concat(returnedBlog))
-    notify(`a new blog "${returnedBlog.title}" by ${returnedBlog.author} added`, 'info')
-    blogFormRef.current?.toggleVisibility()
+      const returnedBlog = await blogService.create(blogObject)
+      setBlogs(prev => prev.concat(returnedBlog))
+      notify(`a new blog "${returnedBlog.title}" by ${returnedBlog.author} added`, 'info')
+      blogFormRef.current?.toggleVisibility()
     }
     catch (exception) {
       console.log(exception)
       notify('error creating blog', 'error')
     }
-  } 
+  }
 
   const likeBlog = async (blog) => {
     try {
@@ -103,11 +104,11 @@ const App = () => {
         author: blog.author,
         title: blog.title,
         url: blog.url,
-        ...(userIdOrObj ? { user: userIdOrObj } : {}), // if user is null/undefined, don't include it
+        ...(userIdOrObj ? { user: userIdOrObj } : {}),
       }
 
       const returned = await blogService.update(blog.id, updatedObject)
-      
+
       setBlogs(prev =>
         prev.map(b => (b.id === blog.id ? returned : b))
       )
@@ -117,8 +118,22 @@ const App = () => {
       console.log(exception)
       notify('failed to like blog', 'error')
     }
-}
+  }
 
+  const deleteBlog = async (blog) => {
+    const ok = window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`)
+    if (!ok) return
+
+    try {
+      await blogService.remove(blog.id)
+      setBlogs(prev => prev.filter(b => b.id !== blog.id))
+      notify(`blog "${blog.title}" removed`, 'info')
+    }
+    catch (exception) {
+      console.log(exception)
+      notify('failed to delete blog', 'error')
+    }
+  }
 
   if (user === null) {
     return (
@@ -142,7 +157,7 @@ const App = () => {
       <div>{user.name} logged in
         <button type="button" onClick={handleLogout}>
             logout
-          </button>
+        </button>
       </div>
       <br />
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
@@ -151,9 +166,21 @@ const App = () => {
       <br />
       {[...blogs]
         .sort((a, b) => (b.likes ?? 0) - (a.likes ?? 0))
-        .map(blog => (
-          <Blog key={blog.id} blog={blog} onLike={() => likeBlog(blog)} />
-        ))}
+        .map(blog => {
+          const canRemove =
+            blog.user?.username === user.username ||
+            blog.user?.id === user.id
+
+          return (
+            <Blog
+              key={blog.id}
+              blog={blog}
+              onLike={() => likeBlog(blog)}
+              onRemove={() => deleteBlog(blog)}
+              canRemove={canRemove}
+            />
+          )
+        })}
     </div>
   )
 }

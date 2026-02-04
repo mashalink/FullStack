@@ -1,32 +1,27 @@
-// eslint.config.js
-const js = require("@eslint/js");
-const globals = require("globals");
+const js = require('@eslint/js')
+const globals = require('globals')
 
 module.exports = [
   js.configs.recommended,
-  { ignores: ["node_modules/**", "dist/**", "build/**", "coverage/**"] },
+  { ignores: ['dist/**', 'build/**', 'coverage/**'] },
 
-  // Обычный код Node
   {
-    files: ["**/*.js"],
+    files: ['**/*.js'],
     languageOptions: {
-      ecmaVersion: "latest",
-      sourceType: "script",
-      globals: {
-        ...globals.node,
-      },
+      ecmaVersion: 'latest',
+      sourceType: 'script',
+      globals: { ...globals.node },
+    },
+    rules: {
+      'no-console': 'off',
+      'no-unused-vars': ['error', { argsIgnorePattern: '^_' }],
     },
   },
 
-  // Тесты под node --test
   {
-    files: ["tests/**/*.js"],
+    files: ['tests/**/*.js'],
     languageOptions: {
-      globals: {
-        ...globals.node,
-        ...globals.nodeBuiltin, // на всякий случай
-        ...globals.nodeTest,    // <-- вот это главное
-      },
+      globals: { ...globals.node, ...globals.nodeTest },
     },
   },
-];
+]

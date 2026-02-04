@@ -15,9 +15,14 @@ const Blog = ({ blog, onLike, onRemove, canRemove }) => {
     setShowDetails(prev => !prev)
   }
 
+  const onDelete = () => {
+    if (onRemove) {
+      onRemove(blog)
+    }
+  }
 
-  console.log('User here:', blog.user)
-  console.log('Name:', blog.user?.name)
+  const showDelete = canRemove
+
   return (
     <div style={blogStyle} className="blog">
       <div>
@@ -35,12 +40,13 @@ const Blog = ({ blog, onLike, onRemove, canRemove }) => {
             <button type="button" onClick={onLike}>like</button>
             <br />
             {blog.author}{' '}
-          </div>  
+          </div>
           <div>added by {blog.user?.name || blog.user?.username || 'unknown'}</div>
-          {canRemove && (
-            <button type="button" onClick={onRemove}>remove</button>
-          )}
         </div>
+      )}
+
+      {showDelete && (
+        <button onClick={onDelete}>delete</button>
       )}
     </div>
   )
