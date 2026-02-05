@@ -25,8 +25,8 @@ const Blog = ({ blog, onLike, onRemove, canRemove }) => {
 
   return (
     <div style={blogStyle} className="blog">
-      <div>
-        {blog.title}{' '}
+      <div className="blogTitle">
+        {blog.title}{' '}{blog.author}{' '}
         <button type="button" onClick={toggleDetails}>
           {showDetails ? 'hide' : 'view'}
         </button>
@@ -39,7 +39,6 @@ const Blog = ({ blog, onLike, onRemove, canRemove }) => {
             likes {blog.likes}{' '}
             <button type="button" onClick={onLike}>like</button>
             <br />
-            {blog.author}{' '}
           </div>
           <div>added by {blog.user?.name || blog.user?.username || 'unknown'}</div>
         </div>
