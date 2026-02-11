@@ -15,7 +15,7 @@ Run:
 - `npm run lint` — ESLint.
 
 Environment:
-- Requires a backend at `http://localhost:3003` with `/api/login`, `/api/blogs`, `/api/users`, and `/api/testing/reset` (for tests).
+- Requires a backend at `http://localhost:3003` with `/api/login`, `/api/blogs`, `/api/users`, and `/api/testing/reset` (for tests). Start backend in test mode via `npm run start:test` inside `part4/bloglist` (uses `NODE_ENV=test`).
 
 ## bloglist-e2e
 - Playwright test suite (`tests/blog_app.spec.js`) against the same frontend and test backend.

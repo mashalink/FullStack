@@ -27,8 +27,8 @@ The course covers modern full-stack development using:
     * 🔗 **Live API:**  
 https://fullstack-9acg.onrender.com/
 - **Part 4:** Testing Express servers, user administration
-    * Jest + Supertest coverage for the blog API (CRUD + auth)
-    * Password hashing, JWT login, request validation, test DB resets
+    * node:test + Supertest coverage for the blog API (CRUD + auth)
+    * Password hashing, JWT login, request validation, test DB resets via `/api/testing/reset`
 - **Part 5:** Testing React apps
     * Bloglist SPA (React + Vite): login, create, like, delete, sort by likes
     * Vitest + Testing Library unit/integration tests; Playwright E2E suite

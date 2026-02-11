@@ -19,7 +19,8 @@ npm install
 2) Add `.env`:
 ```ini
 PORT=3003
-MONGODB_URI=mongodb://localhost:27017/bloglist
+MONGODB_URI=mongodb://localhost:27017/bloglist           # production
+DEV_MONGODB_URI=mongodb://localhost:27017/bloglist-dev    # used by `npm run dev`
 TEST_MONGODB_URI=mongodb://localhost:27017/bloglist-test
 SECRET=dev-secret
 ```
@@ -28,11 +29,13 @@ Optionally add `.env.test` with `TEST_MONGODB_URI` if you keep prod/dev/test sep
 ```bash
 npm run dev   # watch mode
 npm start     # production mode
+npm run start:test # start server with NODE_ENV=test (for E2E)
 ```
 
 ## Scripts
 - `npm run dev` — development server with NODE_ENV=development
 - `npm start` — production server
+- `npm run start:test` — start API in test mode (mounts `/api/testing` helpers)
 - `npm test` — run all tests (`--test-concurrency=1`)
 - `npm run lint` — ESLint over the repo
 - `npm run seed:dev` — seed development database
@@ -79,6 +82,7 @@ curl -X POST http://localhost:3003/api/blogs \
 - `GET /api/users` — list users with their blogs
 - `POST /api/users` — create user (username/password min length 3, username unique)
 - `POST /api/login` — exchange credentials for JWT
+- `POST /api/testing/reset` — **test env only**; clears blogs and users for clean runs
 
 ## Project layout
 ```
