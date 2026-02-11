@@ -26,7 +26,7 @@ const Blog = ({ blog, onLike, onRemove, canRemove }) => {
   return (
     <div style={blogStyle} className="blog">
       <div className="blogTitle">
-        {blog.title}{' '}{blog.author}{' '}
+        {blog.title}{' by '}{blog.author}{' '}
         <button type="button" onClick={toggleDetails}>
           {showDetails ? 'hide' : 'view'}
         </button>

@@ -2,6 +2,8 @@
 
 Express + MongoDB service for managing blogs and users (Full Stack Open, Part 4). Supports JWT-based authentication, ownership-aware deletes, validation, and `node:test` + SuperTest coverage.
 
+> Tested with Node 20+. `node --watch` is used in dev scripts.
+
 ## Tech
 - Node.js + Express + cors
 - MongoDB + Mongoose
@@ -21,6 +23,7 @@ MONGODB_URI=mongodb://localhost:27017/bloglist
 TEST_MONGODB_URI=mongodb://localhost:27017/bloglist-test
 SECRET=dev-secret
 ```
+Optionally add `.env.test` with `TEST_MONGODB_URI` if you keep prod/dev/test separate.
 3) Run:
 ```bash
 npm run dev   # watch mode
@@ -32,6 +35,18 @@ npm start     # production mode
 - `npm start` — production server
 - `npm test` — run all tests (`--test-concurrency=1`)
 - `npm run lint` — ESLint over the repo
+- `npm run seed:dev` — seed development database
+- `npm run seed:prod` — seed production database
+
+### Seeding
+Both seed scripts respect the current `NODE_ENV`/URI pair:
+```bash
+# seed dev DB
+NODE_ENV=development npm run seed:dev
+
+# seed prod DB (be careful!)
+NODE_ENV=production npm run seed:prod
+```
 
 ## API quickstart
 All blog mutations require a Bearer token from `/api/login`.
@@ -84,3 +99,4 @@ npm test -- tests/blog_api.test.js
 npm test -- tests/user_api.test.js
 npm test -- tests/most_likes.test.js
 ```
+Tests run serially via `--test-concurrency=1` to avoid shared DB race conditions.
