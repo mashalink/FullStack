@@ -21,6 +21,8 @@ const initialState = anecdotesAtStart.map(asObject)
 
  const reducer = (state = initialState, action) => {
   switch (action.type) {
+    case 'CREATE':
+       return state.concat(asObject(action.data.content))
     case 'VOTE': {
       const id = action.data.id
       return state.map(a =>
