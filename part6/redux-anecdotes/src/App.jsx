@@ -1,6 +1,7 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { setAnecdotes } from './reducers/anecdoteReducer'
+import { showNotification } from './reducers/notificationReducer'
 import anecdotesService from '../services/anecdotes'
 
 import AnecdoteForm from './components/AnecdoteForm'
@@ -12,22 +13,24 @@ const App = () => {
   const dispatch = useDispatch()
 
   useEffect(() => {
-    anecdotesService
-      .getAll()
-      .then(anecdotes => {
+    const fetchAnecdotes = async () => {
+      try {
+        const anecdotes = await anecdotesService.getAll()
         dispatch(setAnecdotes(anecdotes))
-      })
-      .catch(err => {
+      } catch (err) {
         console.error(err)
-        Notification.show('Failed to fetch anecdotes', 5)
-      })
+        dispatch(showNotification('Failed to fetch anecdotes', 5))
+      }
+    }
+
+    fetchAnecdotes()
   }, [dispatch])
 
   return (
     <div>
       <h2>Anecdotes</h2>
       <Notification />
-       <Filter />
+      <Filter />
       <AnecdoteList />
       <AnecdoteForm />
     </div>
