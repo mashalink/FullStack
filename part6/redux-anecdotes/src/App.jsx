@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
-import { showNotification } from './reducers/notificationReducer'
+import { setNotification } from './reducers/notificationReducer'
 import { initializeAnecdotes } from './reducers/anecdoteReducer'
 
 import AnecdoteForm from './components/AnecdoteForm'
@@ -15,7 +15,7 @@ const App = () => {
   useEffect(() => {
     dispatch(initializeAnecdotes()).catch(err => {
       console.error('Failed to fetch anecdotes:', err)
-      dispatch(showNotification('Failed to load anecdotes', 5))
+      dispatch(setNotification('Failed to load anecdotes', 5))
     })
   }, [dispatch])
 

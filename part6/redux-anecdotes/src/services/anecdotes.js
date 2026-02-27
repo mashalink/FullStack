@@ -33,4 +33,15 @@ const create = async (content) => {
   return data
 }
 
-export default { getAll, create }
+const updateVotes = async (id, votes) => {
+  const response = await fetch(`${baseUrl}/${id}`, {
+    method: 'PATCH',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ votes }),
+  })
+
+  if (!response.ok) throw new Error('Failed to update votes')
+  return await response.json()
+}
+
+export default { getAll, create, updateVotes }
