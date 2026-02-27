@@ -38,5 +38,16 @@ export const initializeAnecdotes = () => {
   }
 }
 
+export const createAnecdoteAsync = (content) => {
+  return async (dispatch) => {
+    try {
+      const newAnecdote = await anecdotesService.create(content)
+      dispatch(createAnecdote(newAnecdote))
+    } catch (err) {
+      console.error('Failed to create anecdote:', err)
+    }
+  }
+}
+
 export const { voteAnecdote, createAnecdote, setAnecdotes} = anecdoteSlice.actions
 export default anecdoteSlice.reducer
