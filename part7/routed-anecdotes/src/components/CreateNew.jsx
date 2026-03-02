@@ -1,11 +1,11 @@
-import { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import PropTypes from 'prop-types'
+import { useField } from '../hooks'
 
 const CreateNew = ({ addNew, notify }) => {
-  const [content, setContent] = useState('')
-  const [author, setAuthor] = useState('')
-  const [info, setInfo] = useState('')
+  const content = useField('text')
+  const author = useField('text')
+  const info = useField('text')
 
   const navigate = useNavigate()
 
@@ -13,13 +13,13 @@ const CreateNew = ({ addNew, notify }) => {
     e.preventDefault()
 
     addNew({
-      content,
-      author,
-      info,
+      content: content.value,
+      author: author.value,
+      info: info.value,
       votes: 0,
     })
 
-    notify(`a new anecdote "${content}" created!`)
+    notify(`a new anecdote "${content.value}" created!`)
     navigate('/')
   }
 
@@ -27,19 +27,16 @@ const CreateNew = ({ addNew, notify }) => {
     <div>
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
-        <div>
-          content
-          <input name="content" value={content} onChange={(e) => setContent(e.target.value)} />
-        </div>
-        <div>
-          author
-          <input name="author" value={author} onChange={(e) => setAuthor(e.target.value)} />
-        </div>
-        <div>
-          url for more info
-          <input name="info" value={info} onChange={(e) => setInfo(e.target.value)} />
-        </div>
-        <button>create</button>
+        content:
+        <input {...content} />
+        <br/>
+        author:
+        <input {...author} />
+        <br/>
+        url for more info:
+        <input {...info} />
+        <br/>
+        <button type="submit">create</button>
       </form>
     </div>
   )
