@@ -2,9 +2,12 @@ import AnecdoteForm from './components/AnecdoteForm'
 import Notification from './components/Notification'
 import { useQuery, useQueryClient, useMutation } from '@tanstack/react-query'
 import { getAnecdotes, updateAnecdote } from './requests'
+import { useContext } from 'react'
+import NotificationContext from './contexts/NotificationContext'
 
 const App = () => {
   const queryClient = useQueryClient()
+  const { setNotification } = useContext(NotificationContext)
 
   const { data: anecdotes, isPending, isError } = useQuery({
     queryKey: ['anecdotes'],
@@ -18,7 +21,7 @@ const App = () => {
       queryClient.invalidateQueries({ queryKey: ['anecdotes'] })
     },
     onError: (err) => {
-      console.error('Failed to vote:', err)
+      setNotification('Voting failed', 5)
     },
   })
 
@@ -27,6 +30,7 @@ const App = () => {
 
   const handleVote = (anecdote) => {
     voteMutation.mutate({ id: anecdote.id, votes: anecdote.votes + 1 })
+    setNotification(`You voted '${anecdote.content}'`, 5)
   }
 
   return (
