@@ -1,5 +1,5 @@
 import { useState } from 'react'
-import { BrowserRouter as Router, Routes, Route, Link, useParams, useNavigate } from 'react-router-dom'
+import { Routes, Route, Link, useNavigate, useMatch } from 'react-router-dom'
 
 const Menu = () => {
   const padding = { paddingRight: 5 }
@@ -98,10 +98,7 @@ const CreateNew = (props) => {
   )
 }
 
-const Anecdote = ({ anecdotes }) => {
-  const id = Number(useParams().id)
-  const anecdote = anecdotes.find(a => a.id === id)
-
+const Anecdote = ({ anecdote }) => {
   if (!anecdote) return <div>Anecdote not found</div>
 
   return (
@@ -143,15 +140,20 @@ const App = () => {
     setAnecdotes(anecdotes.concat(anecdote))
   }
 
+  const match = useMatch('/anecdotes/:id')
+
+  const anecdote = match
+    ? anecdotes.find(a => a.id === Number(match.params.id))
+    : null
+
   return (
-    <Router>
       <div>
         <h1>Software anecdotes</h1>
         <Menu />
         <Notification message={notification} />
 
         <Routes>
-          <Route path="/anecdotes/:id" element={<Anecdote anecdotes={anecdotes} />} />
+          <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
           <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
           <Route path="/about" element={<About />} />
           <Route path="/create" element={<CreateNew addNew={addNew} notify={notify} />} />
@@ -159,7 +161,6 @@ const App = () => {
 
         <Footer />
       </div>
-    </Router>
   )
 }
 
