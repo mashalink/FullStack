@@ -13,13 +13,13 @@ const CreateNew = ({ addNew, notify }) => {
     e.preventDefault()
 
     addNew({
-      content: content.value,
-      author: author.value,
-      info: info.value,
+      content: content.inputProps.value,
+      author: author.inputProps.value,
+      info: info.inputProps.value,
       votes: 0,
     })
 
-    notify(`a new anecdote "${content.value}" created!`)
+    notify(`a new anecdote "${content.inputProps.value}" created!`)
     navigate('/')
   }
 
@@ -28,15 +28,22 @@ const CreateNew = ({ addNew, notify }) => {
       <h2>create a new anecdote</h2>
       <form onSubmit={handleSubmit}>
         content:
-        <input {...content} />
+        <input {...content.inputProps} />
         <br/>
         author:
-        <input {...author} />
+        <input {...author.inputProps} />
         <br/>
         url for more info:
-        <input {...info} />
+        <input {...info.inputProps} />
         <br/>
         <button type="submit">create</button>
+        <button type="button" onClick={() => {
+          content.reset()
+          author.reset()
+          info.reset()
+        }}>
+          reset
+        </button>
       </form>
     </div>
   )
