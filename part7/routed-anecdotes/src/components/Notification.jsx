@@ -1,17 +1,17 @@
-import PropTypes from 'prop-types'
+import PropTypes from "prop-types";
 
 const Notification = ({ message }) => {
-  if (!message) return null
+  if (!message) return null;
 
   return (
-    <div style={{ border: '1px solid', padding: 10, marginBottom: 10 }}>
+    <div style={{ border: "1px solid", padding: 10, marginBottom: 10 }}>
       {message}
     </div>
-  )
-}
+  );
+};
 
 Notification.propTypes = {
-  message: PropTypes.string
-}
+  message: PropTypes.string,
+};
 
-export default Notification
+export default Notification;

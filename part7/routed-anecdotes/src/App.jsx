@@ -1,65 +1,71 @@
-import { useState } from 'react'
-import { Routes, Route, useMatch } from 'react-router-dom'
-import Menu from './components/Menu'
-import Footer from './components/Footer'
-import Notification from './components/Notification'
-import Anecdote from './components/Anecdote'
-import About from './components/About'
-import CreateNew from './components/CreateNew'
-import AnecdoteList from './components/AnecdoteList'
+import { useState } from "react";
+import { Route, Routes, useMatch } from "react-router-dom";
+import About from "./components/About";
+import Anecdote from "./components/Anecdote";
+import AnecdoteList from "./components/AnecdoteList";
+import CreateNew from "./components/CreateNew";
+import Footer from "./components/Footer";
+import Menu from "./components/Menu";
+import Notification from "./components/Notification";
 
 const App = () => {
   const [anecdotes, setAnecdotes] = useState([
     {
-      content: 'If it hurts, do it more often',
-      author: 'Jez Humble',
-      info: 'https://martinfowler.com/bliki/FrequencyReducesDifficulty.html',
+      content: "If it hurts, do it more often",
+      author: "Jez Humble",
+      info: "https://martinfowler.com/bliki/FrequencyReducesDifficulty.html",
       votes: 0,
-      id: 1
+      id: 1,
     },
     {
-      content: 'Premature optimization is the root of all evil',
-      author: 'Donald Knuth',
-      info: 'http://wiki.c2.com/?PrematureOptimization',
+      content: "Premature optimization is the root of all evil",
+      author: "Donald Knuth",
+      info: "http://wiki.c2.com/?PrematureOptimization",
       votes: 0,
-      id: 2
-    }
-  ])
+      id: 2,
+    },
+  ]);
 
-  const [notification, setNotification] = useState('')
+  const [notification, setNotification] = useState("");
 
   const notify = (message) => {
-    setNotification(message)
-    setTimeout(() => setNotification(''), 5000)
-  }
+    setNotification(message);
+    setTimeout(() => setNotification(""), 5000);
+  };
 
   const addNew = (anecdote) => {
-    anecdote.id = Math.round(Math.random() * 10000)
-    setAnecdotes(anecdotes.concat(anecdote))
-  }
+    anecdote.id = Math.round(Math.random() * 10000);
+    setAnecdotes(anecdotes.concat(anecdote));
+  };
 
-  const match = useMatch('/anecdotes/:id')
+  const match = useMatch("/anecdotes/:id");
 
   const anecdote = match
-    ? anecdotes.find(a => a.id === Number(match.params.id))
-    : null
+    ? anecdotes.find((a) => a.id === Number(match.params.id))
+    : null;
 
   return (
-      <div>
-        <h1>Software anecdotes</h1>
-        <Menu />
-        <Notification message={notification} />
+    <div>
+      <h1>Software anecdotes</h1>
+      <Menu />
+      <Notification message={notification} />
 
-        <Routes>
-          <Route path="/anecdotes/:id" element={<Anecdote anecdote={anecdote} />} />
-          <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
-          <Route path="/about" element={<About />} />
-          <Route path="/create" element={<CreateNew addNew={addNew} notify={notify} />} />
-        </Routes>
+      <Routes>
+        <Route
+          path="/anecdotes/:id"
+          element={<Anecdote anecdote={anecdote} />}
+        />
+        <Route path="/" element={<AnecdoteList anecdotes={anecdotes} />} />
+        <Route path="/about" element={<About />} />
+        <Route
+          path="/create"
+          element={<CreateNew addNew={addNew} notify={notify} />}
+        />
+      </Routes>
 
-        <Footer />
-      </div>
-  )
-}
+      <Footer />
+    </div>
+  );
+};
 
-export default App
+export default App;

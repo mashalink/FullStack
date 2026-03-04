@@ -1,27 +1,27 @@
-import { useNavigate } from 'react-router-dom'
-import PropTypes from 'prop-types'
-import { useField } from '../hooks'
+import PropTypes from "prop-types";
+import { useNavigate } from "react-router-dom";
+import { useField } from "../hooks";
 
 const CreateNew = ({ addNew, notify }) => {
-  const content = useField('text')
-  const author = useField('text')
-  const info = useField('text')
+  const content = useField("text");
+  const author = useField("text");
+  const info = useField("text");
 
-  const navigate = useNavigate()
+  const navigate = useNavigate();
 
   const handleSubmit = (e) => {
-    e.preventDefault()
+    e.preventDefault();
 
     addNew({
       content: content.inputProps.value,
       author: author.inputProps.value,
       info: info.inputProps.value,
       votes: 0,
-    })
+    });
 
-    notify(`a new anecdote "${content.inputProps.value}" created!`)
-    navigate('/')
-  }
+    notify(`a new anecdote "${content.inputProps.value}" created!`);
+    navigate("/");
+  };
 
   return (
     <div>
@@ -29,29 +29,32 @@ const CreateNew = ({ addNew, notify }) => {
       <form onSubmit={handleSubmit}>
         content:
         <input {...content.inputProps} />
-        <br/>
+        <br />
         author:
         <input {...author.inputProps} />
-        <br/>
+        <br />
         url for more info:
         <input {...info.inputProps} />
-        <br/>
+        <br />
         <button type="submit">create</button>
-        <button type="button" onClick={() => {
-          content.reset()
-          author.reset()
-          info.reset()
-        }}>
+        <button
+          type="button"
+          onClick={() => {
+            content.reset();
+            author.reset();
+            info.reset();
+          }}
+        >
           reset
         </button>
       </form>
     </div>
-  )
-}
+  );
+};
 
 CreateNew.propTypes = {
   addNew: PropTypes.func.isRequired,
   notify: PropTypes.func.isRequired,
-}
+};
 
-export default CreateNew
+export default CreateNew;

@@ -1,13 +1,13 @@
 const Country = ({ country }) => {
-  if (!country) return null
+  if (!country) return null;
 
   if (!country.found) {
-    return <div>not found...</div>
+    return <div>not found...</div>;
   }
 
-  const c = country.data
-  const name = c.name?.common ?? c.name
-  const flag = c.flags?.png ?? c.flag
+  const c = country.data;
+  const name = c.name?.common ?? c.name;
+  const flag = c.flags?.png ?? c.flag;
 
   return (
     <div>
@@ -16,7 +16,7 @@ const Country = ({ country }) => {
       <div>population {c.population}</div>
       <img src={flag} height="100" alt={`flag of ${name}`} />
     </div>
-  )
-}
+  );
+};
 
-export default Country
+export default Country;
