@@ -1,10 +1,16 @@
 import { useEffect, useRef, useState } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
+import {
+  createBlog,
+  deleteBlog as deleteBlogAction,
+  initializeBlogs,
+  likeBlog as likeBlogAction,
+} from "./reducers/blogsReducer";
 import { showNotification } from "./reducers/notificationReducer";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
@@ -15,18 +21,24 @@ const App = () => {
   const [user, setUser] = useState(null);
   const dispatch = useDispatch();
 
-  const notify = (message, type = "info") => {
-    dispatch(showNotification(message, type));
+  const blogs = useSelector((state) => state.blogs);
+
+  const notify = (message, type = "info", seconds = 5) => {
+    dispatch(showNotification(message, type, seconds));
   };
 
   useEffect(() => {
     const savedUserJSON = window.localStorage.getItem(STORAGE_KEY);
     if (savedUserJSON) {
-      const user = JSON.parse(savedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
+      const savedUser = JSON.parse(savedUserJSON);
+      setUser(savedUser);
+      blogService.setToken(savedUser.token);
     }
   }, []);
+
+  useEffect(() => {
+    dispatch(initializeBlogs());
+  }, [dispatch]);
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -55,53 +67,30 @@ const App = () => {
     notify("logged out", "info");
   };
 
-  const [blogs, setBlogs] = useState([]);
-
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      const blogs = await blogService.getAll();
-      setBlogs(blogs);
-    };
-    fetchBlogs();
-  }, []);
-
   const blogFormRef = useRef();
 
   const addBlog = async (blogObject) => {
     try {
-      const returnedBlog = await blogService.create(blogObject);
-      setBlogs((prev) => prev.concat(returnedBlog));
+      const created = await dispatch(createBlog(blogObject));
       notify(
-        `a new blog "${returnedBlog.title}" by ${returnedBlog.author} added`,
+        `a new blog "${created.title}" by ${created.author} added`,
         "info",
+        5,
       );
       blogFormRef.current?.toggleVisibility();
     } catch (exception) {
       console.log(exception);
-      notify("error creating blog", "error");
+      notify("error creating blog", "error", 5);
     }
   };
 
   const likeBlog = async (blog) => {
     try {
-      const userIdOrObj = blog.user?.id ?? blog.user ?? null;
-
-      const updatedObject = {
-        likes: blog.likes + 1,
-        author: blog.author,
-        title: blog.title,
-        url: blog.url,
-        ...(userIdOrObj ? { user: userIdOrObj } : {}),
-      };
-
-      const returned = await blogService.update(blog.id, updatedObject);
-
-      setBlogs((prev) => prev.map((b) => (b.id === blog.id ? returned : b)));
-
-      notify(`you liked "${blog.title}"`, "info");
+      const returned = await dispatch(likeBlogAction(blog));
+      notify(`you liked "${returned.title}"`, "info", 4);
     } catch (exception) {
       console.log(exception);
-      notify("failed to like blog", "error");
+      notify("failed to like blog", "error", 5);
     }
   };
 
@@ -110,12 +99,11 @@ const App = () => {
     if (!ok) return;
 
     try {
-      await blogService.remove(blog.id);
-      setBlogs((prev) => prev.filter((b) => b.id !== blog.id));
-      notify(`blog "${blog.title}" removed`, "info");
+      await dispatch(deleteBlogAction(blog.id));
+      notify(`blog "${blog.title}" removed`, "info", 4);
     } catch (exception) {
       console.log(exception);
-      notify("failed to delete blog", "error");
+      notify("failed to delete blog", "error", 5);
     }
   };
 
@@ -138,17 +126,22 @@ const App = () => {
     <div>
       <h2>Blogs</h2>
       <Notification />
+
       <div>
-        {user.name} logged in
+        {user.name} logged in{" "}
         <button type="button" onClick={handleLogout}>
           logout
         </button>
       </div>
+
       <br />
+
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={addBlog} />
       </Togglable>
+
       <br />
+
       {[...blogs]
         .sort((a, b) => (b.likes ?? 0) - (a.likes ?? 0))
         .map((blog) => {
