@@ -1,3 +1,4 @@
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { useEffect, useRef, useState } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
@@ -44,75 +45,91 @@ const App = () => {
 
   const handleLogout = () => {
     window.localStorage.removeItem(STORAGE_KEY);
+    blogService.setToken(null);
+
+    queryClient.removeQueries({ queryKey: ["blogs"] });
+
     setUser(null);
     setUsername("");
     setPassword("");
-    blogService.setToken(null);
     notify("logged out", "info");
   };
 
-  const [blogs, setBlogs] = useState([]);
+  const queryClient = useQueryClient();
 
-  useEffect(() => {
-    const fetchBlogs = async () => {
-      const blogs = await blogService.getAll();
-      setBlogs(blogs);
-    };
-    fetchBlogs();
-  }, []);
+  const blogsQuery = useQuery({
+    queryKey: ["blogs"],
+    queryFn: blogService.getAll,
+    enabled: !!user,
+  });
+
+  const blogs = blogsQuery.data ?? [];
 
   const blogFormRef = useRef();
 
-  const addBlog = async (blogObject) => {
-    try {
-      const returnedBlog = await blogService.create(blogObject);
-      setBlogs((prev) => prev.concat(returnedBlog));
+  const createBlogMutation = useMutation({
+    mutationFn: blogService.create,
+    onSuccess: (created) => {
+      queryClient.setQueryData(["blogs"], (old = []) => old.concat(created));
       notify(
-        `a new blog "${returnedBlog.title}" by ${returnedBlog.author} added`,
+        `a new blog "${created.title}" by ${created.author} added`,
         "info",
+        5,
       );
       blogFormRef.current?.toggleVisibility();
-    } catch (exception) {
-      console.log(exception);
-      notify("error creating blog", "error");
-    }
+    },
+    onError: () => {
+      notify("error creating blog", "error", 5);
+    },
+  });
+
+  const addBlog = (blogObject) => {
+    createBlogMutation.mutate(blogObject);
   };
 
-  const likeBlog = async (blog) => {
-    try {
-      const userIdOrObj = blog.user?.id ?? blog.user ?? null;
+  const likeBlogMutation = useMutation({
+    mutationFn: ({ id, updatedObject }) =>
+      blogService.update(id, updatedObject),
+    onSuccess: (updated) => {
+      queryClient.setQueryData(["blogs"], (old = []) =>
+        old.map((b) => (b.id === updated.id ? updated : b)),
+      );
+      notify(`you liked "${updated.title}"`, "info", 4);
+    },
+    onError: () => notify("failed to like blog", "error", 5),
+  });
 
-      const updatedObject = {
-        likes: blog.likes + 1,
-        author: blog.author,
-        title: blog.title,
-        url: blog.url,
-        ...(userIdOrObj ? { user: userIdOrObj } : {}),
-      };
+  const likeBlog = (blog) => {
+    const userIdOrObj = blog.user?.id ?? blog.user ?? null;
 
-      const returned = await blogService.update(blog.id, updatedObject);
+    const updatedObject = {
+      likes: (blog.likes ?? 0) + 1,
+      author: blog.author,
+      title: blog.title,
+      url: blog.url,
+      ...(userIdOrObj ? { user: userIdOrObj } : {}),
+    };
 
-      setBlogs((prev) => prev.map((b) => (b.id === blog.id ? returned : b)));
-
-      notify(`you liked "${blog.title}"`, "info");
-    } catch (exception) {
-      console.log(exception);
-      notify("failed to like blog", "error");
-    }
+    likeBlogMutation.mutate({ id: blog.id, updatedObject });
   };
 
-  const deleteBlog = async (blog) => {
+  const deleteBlogMutation = useMutation({
+    mutationFn: (id) => blogService.remove(id),
+    onSuccess: (_data, id) => {
+      queryClient.setQueryData(["blogs"], (old = []) =>
+        old.filter((b) => b.id !== id),
+      );
+    },
+    onError: () => notify("failed to delete blog", "error", 5),
+  });
+
+  const deleteBlog = (blog) => {
     const ok = window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`);
     if (!ok) return;
 
-    try {
-      await blogService.remove(blog.id);
-      setBlogs((prev) => prev.filter((b) => b.id !== blog.id));
-      notify(`blog "${blog.title}" removed`, "info");
-    } catch (exception) {
-      console.log(exception);
-      notify("failed to delete blog", "error");
-    }
+    deleteBlogMutation.mutate(blog.id, {
+      onSuccess: () => notify(`blog "${blog.title}" removed`, "info", 4),
+    });
   };
 
   if (user === null) {
@@ -129,6 +146,9 @@ const App = () => {
       </div>
     );
   }
+
+  if (blogsQuery.isLoading) return <div>loading...</div>;
+  if (blogsQuery.isError) return <div>failed to load blogs</div>;
 
   return (
     <div>
