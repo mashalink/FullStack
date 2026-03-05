@@ -62,6 +62,7 @@ export const deleteBlog = (blogId) => {
   return async (dispatch) => {
     await blogService.remove(blogId);
     dispatch(removeBlog(blogId));
+    return blogId;
   };
 };
 

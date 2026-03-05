@@ -12,15 +12,12 @@ import {
   likeBlog as likeBlogAction,
 } from "./reducers/blogsReducer";
 import { showNotification } from "./reducers/notificationReducer";
-import blogService from "./services/blogs";
-import loginService from "./services/login";
-
-const STORAGE_KEY = "loggedBlogappUser";
+import { initializeUser, loginUser, logoutUser } from "./reducers/userReducer";
 
 const App = () => {
-  const [user, setUser] = useState(null);
   const dispatch = useDispatch();
 
+  const user = useSelector((state) => state.user);
   const blogs = useSelector((state) => state.blogs);
 
   const notify = (message, type = "info", seconds = 5) => {
@@ -28,13 +25,8 @@ const App = () => {
   };
 
   useEffect(() => {
-    const savedUserJSON = window.localStorage.getItem(STORAGE_KEY);
-    if (savedUserJSON) {
-      const savedUser = JSON.parse(savedUserJSON);
-      setUser(savedUser);
-      blogService.setToken(savedUser.token);
-    }
-  }, []);
+    dispatch(initializeUser());
+  }, [dispatch]);
 
   useEffect(() => {
     dispatch(initializeBlogs());
@@ -45,26 +37,21 @@ const App = () => {
 
   const handleLogin = async ({ username, password }) => {
     try {
-      const loggedInUser = await loginService.login({ username, password });
-      setUser(loggedInUser);
-      blogService.setToken(loggedInUser.token);
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(loggedInUser));
+      const loggedInUser = await dispatch(loginUser({ username, password }));
       setUsername("");
       setPassword("");
-      notify(`welcome back ${loggedInUser.name}`, "info");
+      notify(`welcome back ${loggedInUser.name}`, "info", 5);
     } catch (exception) {
       console.log(exception);
-      notify("wrong credentials", "error");
+      notify("wrong credentials", "error", 5);
     }
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem(STORAGE_KEY);
-    setUser(null);
+    dispatch(logoutUser());
     setUsername("");
     setPassword("");
-    blogService.setToken(null);
-    notify("logged out", "info");
+    notify("logged out", "info", 4);
   };
 
   const blogFormRef = useRef();
@@ -94,17 +81,12 @@ const App = () => {
     }
   };
 
-  const deleteBlog = async (blog) => {
+  const deleteBlog = (blog) => {
     const ok = window.confirm(`Remove blog "${blog.title}" by ${blog.author}?`);
     if (!ok) return;
 
-    try {
-      await dispatch(deleteBlogAction(blog.id));
-      notify(`blog "${blog.title}" removed`, "info", 4);
-    } catch (exception) {
-      console.log(exception);
-      notify("failed to delete blog", "error", 5);
-    }
+    dispatch(deleteBlogAction(blog.id));
+    notify(`blog "${blog.title}" removed`, "info", 4);
   };
 
   if (user === null) {
