@@ -1,29 +1,22 @@
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import Blog from "./components/Blog";
 import BlogForm from "./components/BlogForm";
 import LoginForm from "./components/LoginForm";
 import Notification from "./components/Notification";
 import Togglable from "./components/Togglable";
 import { useNotification } from "./contexts/NotificationContext";
+import { useUser } from "./contexts/UserContext";
 import blogService from "./services/blogs";
 import loginService from "./services/login";
 
 const STORAGE_KEY = "loggedBlogappUser";
 
 const App = () => {
-  const [user, setUser] = useState(null);
-
-  useEffect(() => {
-    const savedUserJSON = window.localStorage.getItem(STORAGE_KEY);
-    if (savedUserJSON) {
-      const user = JSON.parse(savedUserJSON);
-      setUser(user);
-      blogService.setToken(user.token);
-    }
-  }, []);
-
+  const { user, login, logout } = useUser();
   const { notify } = useNotification();
+
+  const queryClient = useQueryClient();
 
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -31,9 +24,7 @@ const App = () => {
   const handleLogin = async ({ username, password }) => {
     try {
       const loggedInUser = await loginService.login({ username, password });
-      setUser(loggedInUser);
-      blogService.setToken(loggedInUser.token);
-      window.localStorage.setItem(STORAGE_KEY, JSON.stringify(loggedInUser));
+      login(loggedInUser);
       setUsername("");
       setPassword("");
       notify(`welcome back ${loggedInUser.name}`, "info");
@@ -44,18 +35,12 @@ const App = () => {
   };
 
   const handleLogout = () => {
-    window.localStorage.removeItem(STORAGE_KEY);
-    blogService.setToken(null);
-
     queryClient.removeQueries({ queryKey: ["blogs"] });
-
-    setUser(null);
+    logout();
     setUsername("");
     setPassword("");
     notify("logged out", "info");
   };
-
-  const queryClient = useQueryClient();
 
   const blogsQuery = useQuery({
     queryKey: ["blogs"],
