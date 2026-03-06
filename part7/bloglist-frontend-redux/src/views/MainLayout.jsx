@@ -1,20 +1,18 @@
-import { Link, Route, Routes } from 'react-router-dom'
+import { Route, Routes } from 'react-router-dom'
 
 import Blog from '../components/Blog'
-import Header from '../components/Header'
 import Notification from '../components/Notification'
 import BlogsView from './BlogsView'
 import User from './User'
+
+import NavBar from '../components/NavBar'
 import Users from './Users'
 
 const MainLayout = ({ user, blogs, handleLogout }) => {
   return (
     <div>
-      <div>
-        <Link to="/">blogs</Link> | <Link to="/users">users</Link>
-      </div>
+      <NavBar user={user} onLogout={handleLogout} />
 
-      <Header user={user} onLogout={handleLogout} />
       <Notification />
 
       <Routes>
