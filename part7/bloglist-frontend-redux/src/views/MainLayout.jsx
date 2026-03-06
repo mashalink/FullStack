@@ -1,9 +1,9 @@
 import { Link, Route, Routes } from "react-router-dom";
 
-import Blog from "./Blog";
+import Blog from "../components/Blog";
+import Header from "../components/Header";
+import Notification from "../components/Notification";
 import BlogsView from "./BlogsView";
-import Header from "./Header";
-import Notification from "./Notification";
 import User from "./User";
 import Users from "./Users";
 

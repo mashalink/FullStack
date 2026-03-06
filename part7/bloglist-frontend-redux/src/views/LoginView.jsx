@@ -1,5 +1,5 @@
-import LoginForm from "./LoginForm";
-import Notification from "./Notification";
+import LoginForm from "../components/LoginForm";
+import Notification from "../components/Notification";
 
 const LoginView = ({
   username,

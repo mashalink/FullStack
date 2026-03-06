@@ -1,10 +1,11 @@
 import { useRef } from "react";
 
-import BlogForm from "./BlogForm";
-import Blogs from "./Blogs";
-import Togglable from "./Togglable";
+import BlogForm from "../components/BlogForm";
+import Blogs from "../components/Blogs";
+import Togglable from "../components/Togglable";
 
 import { useBlogs } from "../hooks/useBlogs";
+import blogs from "../services/blogs";
 
 const BlogsView = () => {
   const { addBlog } = useBlogs();
@@ -19,7 +20,7 @@ const BlogsView = () => {
 
       <br />
 
-      <Blogs />
+      <Blogs blogs={blogs} />
     </div>
   );
 };

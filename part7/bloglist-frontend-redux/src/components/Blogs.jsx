@@ -1,9 +1,6 @@
-import { useSelector } from "react-redux";
 import { Link } from "react-router-dom";
 
-const Blogs = () => {
-  const blogs = useSelector((state) => state.blogs);
-
+const Blogs = ({ blogs }) => {
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,

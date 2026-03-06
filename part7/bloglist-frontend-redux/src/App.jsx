@@ -1,9 +1,9 @@
 import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
-import LoginView from "./components/LoginView";
-import MainLayout from "./components/MainLayout";
 import { useAuth } from "./hooks/useAuth";
+import LoginView from "./views/LoginView";
+import MainLayout from "./views/MainLayout";
 
 import { initializeBlogs } from "./reducers/blogsReducer";
 import { initializeUser } from "./reducers/userReducer";
