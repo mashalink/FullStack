@@ -1,5 +1,6 @@
 import { Link, Route, Routes } from "react-router-dom";
 
+import Blog from "./Blog";
 import BlogsView from "./BlogsView";
 import Header from "./Header";
 import Notification from "./Notification";
@@ -20,6 +21,7 @@ const MainLayout = ({ user, blogs, handleLogout }) => {
         <Route path="/" element={<BlogsView blogs={blogs} user={user} />} />
         <Route path="/users" element={<Users />} />
         <Route path="/users/:id" element={<User />} />
+        <Route path="/blogs/:id" element={<Blog />} />
       </Routes>
     </div>
   );

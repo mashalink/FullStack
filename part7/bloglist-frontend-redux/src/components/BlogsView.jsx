@@ -6,8 +6,8 @@ import Togglable from "./Togglable";
 
 import { useBlogs } from "../hooks/useBlogs";
 
-const BlogsView = ({ blogs, user }) => {
-  const { addBlog, likeBlog, deleteBlog } = useBlogs();
+const BlogsView = () => {
+  const { addBlog } = useBlogs();
 
   const blogFormRef = useRef();
 
@@ -19,12 +19,7 @@ const BlogsView = ({ blogs, user }) => {
 
       <br />
 
-      <Blogs
-        blogs={blogs}
-        user={user}
-        onLike={likeBlog}
-        onRemove={deleteBlog}
-      />
+      <Blogs />
     </div>
   );
 };

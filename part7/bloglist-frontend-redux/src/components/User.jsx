@@ -1,21 +1,13 @@
-import { useEffect, useState } from "react";
+import { useSelector } from "react-redux";
 import { useParams } from "react-router-dom";
-import usersService from "../services/users";
 
 const User = () => {
   const { id } = useParams();
-  const [user, setUser] = useState(null);
+  const users = useSelector((state) => state.users);
 
-  useEffect(() => {
-    usersService.getAll().then((users) => {
-      const foundUser = users.find((u) => u.id === id);
-      setUser(foundUser);
-    });
-  }, [id]);
+  const user = users.find((u) => u.id === id);
 
-  if (!user) {
-    return <div>loading...</div>;
-  }
+  if (!user) return null;
 
   return (
     <div>

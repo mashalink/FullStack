@@ -1,56 +1,34 @@
-import { useState } from "react";
+import { useSelector } from "react-redux";
+import { useParams } from "react-router-dom";
+import { useBlogs } from "../hooks/useBlogs";
 
-const Blog = ({ blog, onLike, onRemove, canRemove }) => {
-  const [showDetails, setShowDetails] = useState(false);
+const Blog = () => {
+  const { id } = useParams();
+  const blogs = useSelector((state) => state.blogs);
+  const blog = blogs.find((b) => b.id === id);
+  const { likeBlog, deleteBlog } = useBlogs();
 
-  const blogStyle = {
-    paddingTop: 10,
-    paddingLeft: 2,
-    border: "solid",
-    borderWidth: 1,
-    marginBottom: 5,
-  };
-
-  const toggleDetails = () => {
-    setShowDetails((prev) => !prev);
-  };
-
-  const onDelete = () => {
-    if (onRemove) {
-      onRemove(blog);
-    }
-  };
-
-  const showDelete = canRemove;
-
+  if (!blog) {
+    return <div>loading...</div>;
+  }
   return (
-    <div style={blogStyle} className="blog">
-      <div className="blogTitle">
-        {blog.title}
-        {" by "}
-        {blog.author}{" "}
-        <button type="button" onClick={toggleDetails}>
-          {showDetails ? "hide" : "view"}
+    <div>
+      <h1>{blog.title}</h1>
+      <a href={blog.url} target="_blank" rel="noopener noreferrer">
+        {blog.url}
+      </a>
+      <div>
+        likes {blog.likes}{" "}
+        <button type="button" onClick={() => likeBlog(blog)}>
+          like
         </button>
       </div>
-
-      {showDetails && (
-        <div className="blogDetails">
-          <div>{blog.url}</div>
-          <div>
-            likes {blog.likes}{" "}
-            <button type="button" onClick={onLike}>
-              like
-            </button>
-            <br />
-          </div>
-          <div>
-            added by {blog.user?.name || blog.user?.username || "unknown"}
-          </div>
-        </div>
-      )}
-
-      {showDelete && <button onClick={onDelete}>delete</button>}
+      <div>added by {blog.user?.name || blog.user?.username || "unknown"}</div>
+      <div>
+        <button type="button" onClick={() => deleteBlog(blog)}>
+          delete
+        </button>
+      </div>
     </div>
   );
 };

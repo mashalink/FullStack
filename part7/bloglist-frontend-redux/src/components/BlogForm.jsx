@@ -16,15 +16,15 @@ const BlogForm = ({ createBlog }) => {
     const cleanAuthor = author.trim();
     const cleanUrl = url.trim();
 
-    if (!cleanTitle || !cleanAuthor || !cleanUrl) {
-      dispatch(showNotification("Please fill all fields", "error", 5));
+    if (!cleanTitle || !cleanUrl) {
+      dispatch(showNotification("Please fill in title and URL", "error", 5));
       return;
     }
 
     await createBlog({
-      title,
-      author,
-      url,
+      title: cleanTitle,
+      author: cleanAuthor,
+      url: cleanUrl,
     });
     setTitle("");
     setAuthor("");

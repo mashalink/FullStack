@@ -7,6 +7,7 @@ import { useAuth } from "./hooks/useAuth";
 
 import { initializeBlogs } from "./reducers/blogsReducer";
 import { initializeUser } from "./reducers/userReducer";
+import { initializeUsers } from "./reducers/usersReducer";
 
 const App = () => {
   const dispatch = useDispatch();
@@ -29,6 +30,10 @@ const App = () => {
 
   useEffect(() => {
     dispatch(initializeBlogs());
+  }, [dispatch]);
+
+  useEffect(() => {
+    dispatch(initializeUsers());
   }, [dispatch]);
 
   if (!user) {
