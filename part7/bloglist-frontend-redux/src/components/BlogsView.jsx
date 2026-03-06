@@ -13,8 +13,6 @@ const BlogsView = ({ blogs, user }) => {
 
   return (
     <div>
-      <br />
-
       <Togglable buttonLabel="create new blog" ref={blogFormRef}>
         <BlogForm createBlog={(blog) => addBlog(blog, blogFormRef)} />
       </Togglable>

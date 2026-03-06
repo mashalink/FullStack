@@ -1,12 +1,26 @@
 import { useState } from "react";
+import { useDispatch } from "react-redux";
+import { showNotification } from "../reducers/notificationReducer";
 
 const BlogForm = ({ createBlog }) => {
   const [title, setTitle] = useState("");
   const [author, setAuthor] = useState("");
   const [url, setUrl] = useState("");
 
+  const dispatch = useDispatch();
+
   const handleSubmit = async (event) => {
     event.preventDefault();
+
+    const cleanTitle = title.trim();
+    const cleanAuthor = author.trim();
+    const cleanUrl = url.trim();
+
+    if (!cleanTitle || !cleanAuthor || !cleanUrl) {
+      dispatch(showNotification("Please fill all fields", "error", 5));
+      return;
+    }
+
     await createBlog({
       title,
       author,
