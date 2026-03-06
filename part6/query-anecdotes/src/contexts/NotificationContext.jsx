@@ -1,4 +1,4 @@
-import { createContext, useReducer } from "react";
+import { createContext, useReducer } from 'react'
 
 const notificationReducer = (state, action) => {
   switch (action.type) {
@@ -12,7 +12,7 @@ const notificationReducer = (state, action) => {
 }
 
 let timeoutId = null
-const NotificationContext = createContext();
+const NotificationContext = createContext()
 
 export const NotificationContextProvider = (props) => {
   const [notification, dispatch] = useReducer(notificationReducer, '')

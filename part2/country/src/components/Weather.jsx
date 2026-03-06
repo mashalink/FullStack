@@ -10,7 +10,7 @@ export default function Weather({ capital }) {
     if (!capital || !apiKey) return;
 
     const url = `https://api.openweathermap.org/data/2.5/weather?q=${encodeURIComponent(
-      capital
+      capital,
     )}&units=metric&appid=${apiKey}`;
 
     fetch(url)

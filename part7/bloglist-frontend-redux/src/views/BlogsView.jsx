@@ -1,15 +1,15 @@
-import { useRef } from "react";
+import { useRef } from 'react'
 
-import BlogForm from "../components/BlogForm";
-import Blogs from "../components/Blogs";
-import Togglable from "../components/Togglable";
+import BlogForm from '../components/BlogForm'
+import Blogs from '../components/Blogs'
+import Togglable from '../components/Togglable'
 
-import { useBlogs } from "../hooks/useBlogs";
+import { useBlogs } from '../hooks/useBlogs'
 
 const BlogsView = () => {
-  const { addBlog } = useBlogs();
+  const { addBlog } = useBlogs()
 
-  const blogFormRef = useRef();
+  const blogFormRef = useRef()
 
   return (
     <div>
@@ -21,7 +21,7 @@ const BlogsView = () => {
 
       <Blogs />
     </div>
-  );
-};
+  )
+}
 
-export default BlogsView;
+export default BlogsView

@@ -26,7 +26,7 @@ export function useCreateUpdatePerson({
     const existing = persons.find((p) => norm(p.name) === norm(originalName));
 
     const numberUsedByAnother = persons.some(
-      (p) => p.number === number && (!existing || p.id !== existing.id)
+      (p) => p.number === number && (!existing || p.id !== existing.id),
     );
     if (numberUsedByAnother) {
       alert(`The number ${number} is already used by another contact.`);
@@ -46,7 +46,7 @@ export function useCreateUpdatePerson({
         const ok = window.confirm(
           `"${existing.name}" is already in the phonebook. Replace ${
             existing.number ?? "—"
-          } with ${number}?`
+          } with ${number}?`,
         );
         if (!ok) return;
 
@@ -55,7 +55,7 @@ export function useCreateUpdatePerson({
           number,
         });
         setPersons((prev) =>
-          prev.map((p) => (p.id === updated.id ? updated : p))
+          prev.map((p) => (p.id === updated.id ? updated : p)),
         );
         setNewName("");
         setNewNumber("");
@@ -73,7 +73,7 @@ export function useCreateUpdatePerson({
     } catch (err) {
       if (err?.response?.status === 404) {
         setError(
-          `Information of "${existing.name}" has already been removed from server`
+          `Information of "${existing.name}" has already been removed from server`,
         );
         setPersons((prev) => prev.filter((p) => p.id !== existing.id));
         return;

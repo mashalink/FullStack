@@ -1,16 +1,16 @@
 # Part 3 — Phonebook Backend
 
-This folder contains the backend implementation for **Full Stack Open Part 3: Phonebook**.  
+This folder contains the backend implementation for **Full Stack Open Part 3: Phonebook**.
 The backend is built with **Node.js**, **Express**, and also serves the production build of the frontend.
 
 ---
 
 ## 📌 Live Application
 
-- **Frontend + Backend:**  
+- **Frontend + Backend:**
   https://fullstack-9acg.onrender.com/
 
-- **API Endpoint:**  
+- **API Endpoint:**
   https://fullstack-9acg.onrender.com/api/persons
 
 ---
@@ -260,7 +260,7 @@ app.put("/api/persons/:id", (req, res, next) => {
       new: true,
       runValidators: true,
       context: "query",
-    }
+    },
   )
     .then((updatedPerson) => {
       if (updatedPerson) res.json(updatedPerson);
@@ -307,34 +307,39 @@ The backend now uses ESLint to enforce consistent formatting and catch common is
 ```bash
 npm install --save-dev eslint @eslint/js @stylistic/eslint-plugin globals
 ```
+
 **Added** eslint.config.mjs:
+
 ```js
-import globals from 'globals'
-import js from '@eslint/js'
-import stylisticJs from '@stylistic/eslint-plugin'
+import globals from "globals";
+import js from "@eslint/js";
+import stylisticJs from "@stylistic/eslint-plugin";
 
 export default [
   js.configs.recommended,
   {
-    files: ['**/*.js'],
+    files: ["**/*.js"],
     languageOptions: {
-      sourceType: 'commonjs',
+      sourceType: "commonjs",
       globals: { ...globals.node },
-      ecmaVersion: 'latest',
+      ecmaVersion: "latest",
     },
-    plugins: { '@stylistic/js': stylisticJs },
+    plugins: { "@stylistic/js": stylisticJs },
     rules: {
-      '@stylistic/js/indent': ['error', 2],
-      '@stylistic/js/quotes': ['error', 'single'],
-      '@stylistic/js/semi': ['error', 'never'],
-      'no-console': 'off',
+      "@stylistic/js/indent": ["error", 2],
+      "@stylistic/js/quotes": ["error", "single"],
+      "@stylistic/js/semi": ["error", "never"],
+      "no-console": "off",
     },
   },
-  { ignores: ['dist/**'] },
-]
+  { ignores: ["dist/**"] },
+];
 ```
+
 **Lint script added:**
+
 ```bash
 "lint": "eslint ."
 ```
+
 All lint errors were fixed, completing exercise 3.22.

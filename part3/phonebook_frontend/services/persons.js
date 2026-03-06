@@ -23,4 +23,4 @@ const deletePersonById = (id) => {
   return api.delete(`/${id}`).then((r) => r.data);
 };
 
-export { getPersons, createPerson, updatePerson, deletePersonById };
+export { createPerson, deletePersonById, getPersons, updatePerson };

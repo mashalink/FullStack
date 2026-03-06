@@ -1,12 +1,12 @@
-const { test } = require('node:test')
-const assert = require('node:assert')
+const { test } = require("node:test");
+const assert = require("node:assert");
 
-const listHelper = require('../utils/list_helper')
+const listHelper = require("../utils/list_helper");
 
-test('dummy returns one', () => {
-  const blogs = []
+test("dummy returns one", () => {
+  const blogs = [];
 
-  const result = listHelper.dummy(blogs)
+  const result = listHelper.dummy(blogs);
 
-  assert.strictEqual(result, 1)
-})
+  assert.strictEqual(result, 1);
+});

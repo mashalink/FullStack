@@ -6,6 +6,19 @@ const config = require("../utils/config");
 const User = require("../models/user");
 const Blog = require("../models/blog");
 
+const randomComments = [
+  "great post",
+  "very useful",
+  "nice article",
+  "thanks for sharing",
+  "learned something new",
+  "this helped a lot",
+  "interesting perspective",
+  "good explanation",
+  "awesome",
+  "cool writeup",
+];
+
 const seed = async () => {
   if (process.env.NODE_ENV !== "development") {
     console.log("Refusing to seed: NODE_ENV is not development");
@@ -49,11 +62,19 @@ const seed = async () => {
     const userBlogs = [];
 
     for (let i = 1; i <= blogCount; i++) {
+      const commentCount = Math.floor(Math.random() * 5); // 0–4 comments
+
+      const comments = Array.from(
+        { length: commentCount },
+        () => randomComments[Math.floor(Math.random() * randomComments.length)],
+      );
+
       userBlogs.push({
         title: `${user.name} blog ${i}`,
         author: user.name,
         url: `https://example.com/${user.username}-${i}`,
         likes: Math.floor(Math.random() * 20),
+        comments,
         user: user._id,
       });
     }

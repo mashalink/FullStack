@@ -1,5 +1,5 @@
-import LoginForm from "../components/LoginForm";
-import Notification from "../components/Notification";
+import LoginForm from '../components/LoginForm'
+import Notification from '../components/Notification'
 
 const LoginView = ({
   username,
@@ -20,7 +20,7 @@ const LoginView = ({
         onLogin={handleLogin}
       />
     </div>
-  );
-};
+  )
+}
 
-export default LoginView;
+export default LoginView

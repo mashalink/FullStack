@@ -1,13 +1,13 @@
-import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useSelector } from 'react-redux'
+import { useParams } from 'react-router-dom'
 
 const User = () => {
-  const { id } = useParams();
-  const users = useSelector((state) => state.users);
+  const { id } = useParams()
+  const users = useSelector((state) => state.users)
 
-  const user = users.find((u) => u.id === id);
+  const user = users.find((u) => u.id === id)
 
-  if (!user) return null;
+  if (!user) return null
 
   return (
     <div>
@@ -21,7 +21,7 @@ const User = () => {
         ))}
       </ul>
     </div>
-  );
-};
+  )
+}
 
-export default User;
+export default User

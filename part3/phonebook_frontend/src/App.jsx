@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
-import Header from "./components/Header.jsx";
-import SmallHeader from "./components/SmallHeader.jsx";
-import PersonForm from "./components/PersonForm.jsx";
+import { useEffect, useState } from "react";
+import "./App.css";
 import Filter from "./components/Filter.jsx";
+import Header from "./components/Header.jsx";
 import ListSection from "./components/ListSection.jsx";
-import { useFilteredPersons } from "./hooks/useFilteredPersons.jsx";
-import { usePersons } from "./hooks/usePersons.jsx";
+import Notification from "./components/Notification.jsx";
+import PersonForm from "./components/PersonForm.jsx";
+import SmallHeader from "./components/SmallHeader.jsx";
 import { useCreateUpdatePerson } from "./hooks/useCreatePerson.jsx";
 import { useDeletePerson } from "./hooks/useDeletePerson.jsx";
-import Notification from "./components/Notification.jsx";
-import "./App.css";
+import { useFilteredPersons } from "./hooks/useFilteredPersons.jsx";
+import { usePersons } from "./hooks/usePersons.jsx";
 
 const App = () => {
   const [newName, setNewName] = useState("");

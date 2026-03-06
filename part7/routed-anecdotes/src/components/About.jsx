@@ -16,6 +16,6 @@ const About = () => (
       find the best and add more.
     </p>
   </div>
-);
+)
 
-export default About;
+export default About

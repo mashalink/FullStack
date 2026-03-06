@@ -5,6 +5,7 @@ Express + MongoDB service for managing blogs and users (Full Stack Open, Part 4)
 > Tested with Node 20+. `node --watch` is used in dev scripts.
 
 ## Tech
+
 - Node.js + Express + cors
 - MongoDB + Mongoose
 - dotenv for env loading
@@ -12,11 +13,15 @@ Express + MongoDB service for managing blogs and users (Full Stack Open, Part 4)
 - node:test + SuperTest for tests, ESLint for linting
 
 ## Setup
-1) Install deps:
+
+1. Install deps:
+
 ```bash
 npm install
 ```
-2) Add `.env`:
+
+2. Add `.env`:
+
 ```ini
 PORT=3003
 MONGODB_URI=mongodb://localhost:27017/bloglist           # production
@@ -24,8 +29,9 @@ DEV_MONGODB_URI=mongodb://localhost:27017/bloglist-dev    # used by `npm run dev
 TEST_MONGODB_URI=mongodb://localhost:27017/bloglist-test
 SECRET=dev-secret
 ```
-Optionally add `.env.test` with `TEST_MONGODB_URI` if you keep prod/dev/test separate.
-3) Run:
+
+Optionally add `.env.test` with `TEST_MONGODB_URI` if you keep prod/dev/test separate. 3) Run:
+
 ```bash
 npm run dev   # watch mode
 npm start     # production mode
@@ -33,6 +39,7 @@ npm run start:test # start server with NODE_ENV=test (for E2E)
 ```
 
 ## Scripts
+
 - `npm run dev` — development server with NODE_ENV=development
 - `npm start` — production server
 - `npm run start:test` — start API in test mode (mounts `/api/testing` helpers)
@@ -42,7 +49,9 @@ npm run start:test # start server with NODE_ENV=test (for E2E)
 - `npm run seed:prod` — seed production database
 
 ### Seeding
+
 Both seed scripts respect the current `NODE_ENV`/URI pair:
+
 ```bash
 # seed dev DB
 NODE_ENV=development npm run seed:dev
@@ -52,21 +61,27 @@ NODE_ENV=production npm run seed:prod
 ```
 
 ## API quickstart
+
 All blog mutations require a Bearer token from `/api/login`.
 
-1) Create user:
+1. Create user:
+
 ```bash
 curl -X POST http://localhost:3003/api/users \
   -H "Content-Type: application/json" \
   -d '{"username":"alice","name":"Alice","password":"secret"}'
 ```
-2) Log in to get a token:
+
+2. Log in to get a token:
+
 ```bash
 TOKEN=$(curl -s -X POST http://localhost:3003/api/login \
   -H "Content-Type: application/json" \
   -d '{"username":"alice","password":"secret"}' | jq -r .token)
 ```
-3) Create a blog (likes default to 0):
+
+3. Create a blog (likes default to 0):
+
 ```bash
 curl -X POST http://localhost:3003/api/blogs \
   -H "Authorization: Bearer $TOKEN" \
@@ -75,6 +90,7 @@ curl -X POST http://localhost:3003/api/blogs \
 ```
 
 ## Routes
+
 - `GET /api/blogs` — list blogs (populated `user` info)
 - `POST /api/blogs` — create blog, auth required
 - `PUT /api/blogs/:id` — update title/author/url/likes
@@ -85,6 +101,7 @@ curl -X POST http://localhost:3003/api/blogs \
 - `POST /api/testing/reset` — **test env only**; clears blogs and users for clean runs
 
 ## Project layout
+
 ```
 app.js
 index.js
@@ -95,7 +112,9 @@ tests/ (helpers + API suites)
 ```
 
 ## Testing
+
 Uses `TEST_MONGODB_URI` and NODE_ENV=test. Ensure the test DB exists or Mongo can create it.
+
 ```bash
 npm test
 # or a single suite (examples)
@@ -103,4 +122,5 @@ npm test -- tests/blog_api.test.js
 npm test -- tests/user_api.test.js
 npm test -- tests/most_likes.test.js
 ```
+
 Tests run serially via `--test-concurrency=1` to avoid shared DB race conditions.

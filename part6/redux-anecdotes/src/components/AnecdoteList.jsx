@@ -1,4 +1,4 @@
-import { useSelector, useDispatch } from 'react-redux'
+import { useDispatch, useSelector } from 'react-redux'
 import { voteAnecdoteAsync } from '../reducers/anecdoteReducer'
 import { setNotification } from '../reducers/notificationReducer'
 
@@ -8,8 +8,8 @@ const AnecdoteList = () => {
   const anecdotes = useSelector((state) => state.anecdotes)
   const filter = useSelector((state) => state.filter)
 
-  const visible = anecdotes.filter(a =>
-    a.content.toLowerCase().includes(filter.toLowerCase())
+  const visible = anecdotes.filter((a) =>
+    a.content.toLowerCase().includes(filter.toLowerCase()),
   )
 
   const vote = (anecdote) => {

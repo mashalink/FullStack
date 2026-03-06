@@ -14,15 +14,15 @@ const getAll = async () => {
 const create = async (content) => {
   const newAnecdote = {
     content,
-    votes: 0
+    votes: 0,
   }
 
   const response = await fetch(baseUrl, {
     method: 'POST',
     headers: {
-      'Content-Type': 'application/json'
+      'Content-Type': 'application/json',
     },
-    body: JSON.stringify(newAnecdote)
+    body: JSON.stringify(newAnecdote),
   })
 
   if (!response.ok) {

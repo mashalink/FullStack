@@ -1,16 +1,16 @@
-import { useState } from "react";
-import Country from "./components/Country";
-import { useCountry, useField } from "./hooks";
+import { useState } from 'react'
+import Country from './components/Country'
+import { useCountry, useField } from './hooks'
 
 const App = () => {
-  const nameInput = useField("text");
-  const [name, setName] = useState("");
-  const country = useCountry(name);
+  const nameInput = useField('text')
+  const [name, setName] = useState('')
+  const country = useCountry(name)
 
   const fetch = (e) => {
-    e.preventDefault();
-    setName(nameInput.inputProps.value);
-  };
+    e.preventDefault()
+    setName(nameInput.inputProps.value)
+  }
 
   return (
     <div>
@@ -21,7 +21,7 @@ const App = () => {
 
       <Country country={country} />
     </div>
-  );
-};
+  )
+}
 
-export default App;
+export default App

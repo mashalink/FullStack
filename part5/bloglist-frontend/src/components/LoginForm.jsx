@@ -1,8 +1,14 @@
-const LoginForm = ({ username, password, setUsername, setPassword, onLogin }) => {
+const LoginForm = ({
+  username,
+  password,
+  setUsername,
+  setPassword,
+  onLogin,
+}) => {
   const handleSubmit = (event) => {
-    event.preventDefault()
-    onLogin({ username, password })
-  }
+    event.preventDefault();
+    onLogin({ username, password });
+  };
 
   return (
     <div>
@@ -34,7 +40,7 @@ const LoginForm = ({ username, password, setUsername, setPassword, onLogin }) =>
         <button type="submit">login</button>
       </form>
     </div>
-  )
-}
+  );
+};
 
-export default LoginForm
+export default LoginForm;

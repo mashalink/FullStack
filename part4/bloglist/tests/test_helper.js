@@ -1,66 +1,65 @@
-const Blog = require('../models/blog')
-const User = require('../models/user')
+const Blog = require("../models/blog");
+const User = require("../models/user");
 
 // BLOGS
 const initialBlogs = [
   {
-    title: 'Ponchik learns testing',
-    author: 'Ponchik',
-    url: 'https://example.com/ponchik',
+    title: "Ponchik learns testing",
+    author: "Ponchik",
+    url: "https://example.com/ponchik",
     likes: 7,
   },
   {
-    title: 'Bulochka writes clean code',
-    author: 'Bulochka',
-    url: 'https://example.com/bulochka',
+    title: "Bulochka writes clean code",
+    author: "Bulochka",
+    url: "https://example.com/bulochka",
     likes: 12,
   },
   {
-    title: 'Bublik and the mysteries of MongoDB',
-    author: 'Bublik',
-    url: 'https://example.com/bublik',
+    title: "Bublik and the mysteries of MongoDB",
+    author: "Bublik",
+    url: "https://example.com/bublik",
     likes: 5,
   },
-]
+];
 
 const nonExistingId = async () => {
   const blog = new Blog({
-    title: 'temporary blog',
-    author: 'Temp',
-    url: 'https://example.com/temp',
+    title: "temporary blog",
+    author: "Temp",
+    url: "https://example.com/temp",
     likes: 0,
-  })
+  });
 
-  await blog.save()
-  await blog.deleteOne()
+  await blog.save();
+  await blog.deleteOne();
 
-  return blog._id.toString()
-}
+  return blog._id.toString();
+};
 
 const blogsInDb = async () => {
-  const blogs = await Blog.find({})
-  return blogs.map(b => b.toJSON())
-}
-
+  const blogs = await Blog.find({});
+  return blogs.map((b) => b.toJSON());
+};
 
 // USERS
 const initialUsers = [
   {
-    username: 'ponchik',
-    name: 'Ponchik',
-    password: 'hashedpassword1',
+    username: "ponchik",
+    name: "Ponchik",
+    password: "hashedpassword1",
   },
   {
-    username: 'bulochka',
-    name: 'Bulochka',
-    password: 'hashedpassword2',
+    username: "bulochka",
+    name: "Bulochka",
+    password: "hashedpassword2",
   },
-]
+];
 
 const usersInDb = async () => {
-  const users = await User.find({})
-  return users.map((u) => u.toJSON())
-}
+  const users = await User.find({});
+  return users.map((u) => u.toJSON());
+};
 
 module.exports = {
   initialBlogs,
@@ -68,4 +67,4 @@ module.exports = {
   blogsInDb,
   usersInDb,
   initialUsers,
-}
+};

@@ -1,6 +1,6 @@
 # 📘 Part 2 — Communicating with Server ✔️
 
-Focus on connecting React apps to a backend using REST APIs.  
+Focus on connecting React apps to a backend using REST APIs.
 Fetching, updating, deleting data, reusable components, and project structure.
 
 ---
@@ -27,7 +27,7 @@ Fetching, updating, deleting data, reusable components, and project structure.
 - Error handling & backend sync (2.16–2.18)
 - Country info app + weather API _(2.19–2.20)_
 
-✔️ Country search + weather API fully done  
+✔️ Country search + weather API fully done
 ✔️ Phonebook frontend completed & works with backend
 
 ---

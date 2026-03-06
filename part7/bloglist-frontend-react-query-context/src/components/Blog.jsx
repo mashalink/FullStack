@@ -12,7 +12,7 @@ const Blog = ({ blog, onLike, onRemove, canRemove }) => {
   }
 
   const toggleDetails = () => {
-    setShowDetails(prev => !prev)
+    setShowDetails((prev) => !prev)
   }
 
   const onDelete = () => {
@@ -26,7 +26,9 @@ const Blog = ({ blog, onLike, onRemove, canRemove }) => {
   return (
     <div style={blogStyle} className="blog">
       <div className="blogTitle">
-        {blog.title}{' by '}{blog.author}{' '}
+        {blog.title}
+        {' by '}
+        {blog.author}{' '}
         <button type="button" onClick={toggleDetails}>
           {showDetails ? 'hide' : 'view'}
         </button>
@@ -37,16 +39,18 @@ const Blog = ({ blog, onLike, onRemove, canRemove }) => {
           <div>{blog.url}</div>
           <div>
             likes {blog.likes}{' '}
-            <button type="button" onClick={onLike}>like</button>
+            <button type="button" onClick={onLike}>
+              like
+            </button>
             <br />
           </div>
-          <div>added by {blog.user?.name || blog.user?.username || 'unknown'}</div>
+          <div>
+            added by {blog.user?.name || blog.user?.username || 'unknown'}
+          </div>
         </div>
       )}
 
-      {showDelete && (
-        <button onClick={onDelete}>delete</button>
-      )}
+      {showDelete && <button onClick={onDelete}>delete</button>}
     </div>
   )
 }

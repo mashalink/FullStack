@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import "./App.css";
-import CountryList from "./components/CountryList";
 import CountryDetail from "./components/CountryDetail";
+import CountryList from "./components/CountryList";
 import Search from "./components/Search";
 
 export default function App() {
@@ -15,7 +15,7 @@ export default function App() {
   }, []);
 
   const filtered = countries.filter((c) =>
-    c.name.common.toLowerCase().includes(filter.toLowerCase())
+    c.name.common.toLowerCase().includes(filter.toLowerCase()),
   );
 
   let content = null;

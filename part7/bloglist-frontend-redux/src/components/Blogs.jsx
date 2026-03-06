@@ -1,16 +1,16 @@
-import { useSelector } from "react-redux";
-import { Link } from "react-router-dom";
+import { useSelector } from 'react-redux'
+import { Link } from 'react-router-dom'
 
 const Blogs = () => {
-  const blogs = useSelector((state) => state.blogs);
+  const blogs = useSelector((state) => state.blogs)
 
   const blogStyle = {
     paddingTop: 10,
     paddingLeft: 2,
-    border: "solid",
+    border: 'solid',
     borderWidth: 1,
     marginBottom: 5,
-  };
+  }
 
   return (
     <div>
@@ -23,10 +23,10 @@ const Blogs = () => {
                 {blog.title} {blog.author}
               </Link>
             </div>
-          );
+          )
         })}
     </div>
-  );
-};
+  )
+}
 
-export default Blogs;
+export default Blogs

@@ -1,39 +1,51 @@
-import globals from "globals";
 import js from "@eslint/js";
-import stylisticJs from "@stylistic/eslint-plugin";
+import react from "eslint-plugin-react";
+import reactHooks from "eslint-plugin-react-hooks";
+import reactRefresh from "eslint-plugin-react-refresh";
+import globals from "globals";
 
 export default [
-  js.configs.recommended,
+  { ignores: ["dist"] },
 
   {
-    files: ["**/*.js"],
-
+    files: ["**/*.{js,jsx}"],
     languageOptions: {
-      sourceType: "commonjs",
-      globals: { ...globals.node },
       ecmaVersion: "latest",
+      sourceType: "module",
+      globals: globals.browser,
+      parserOptions: {
+        ecmaFeatures: { jsx: true },
+      },
     },
-
+    settings: {
+      react: { version: "detect" },
+    },
     plugins: {
-      "@stylistic/js": stylisticJs,
+      react,
+      "react-hooks": reactHooks,
+      "react-refresh": reactRefresh,
     },
-
     rules: {
-      "@stylistic/js/indent": ["error", 2],
-      "@stylistic/js/linebreak-style": ["error", "unix"],
-      "@stylistic/js/quotes": ["error", "single"],
-      "@stylistic/js/semi": ["error", "never"],
-
-      eqeqeq: "error",
-      "no-trailing-spaces": "error",
-      "object-curly-spacing": ["error", "always"],
-      "arrow-spacing": ["error", { before: true, after: true }],
-      "no-unused-vars": "off",
-      "no-console": "off",
+      ...js.configs.recommended.rules,
+      ...react.configs.recommended.rules,
+      ...reactHooks.configs.recommended.rules,
+      "react/react-in-jsx-scope": "off",
+      "react-refresh/only-export-components": [
+        "warn",
+        { allowConstantExport: true },
+      ],
+      "no-unused-vars": ["error", { varsIgnorePattern: "^[A-Z_]" }],
+      "react/prop-types": "off",
     },
   },
 
   {
-    ignores: ["dist/**"],
+    files: ["**/*.{test,spec}.{js,jsx}"],
+    languageOptions: {
+      globals: {
+        ...globals.browser,
+        ...globals.vitest,
+      },
+    },
   },
 ];

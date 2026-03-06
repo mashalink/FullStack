@@ -1,87 +1,130 @@
-const middleware = require('../utils/middleware')
-const blogsRouter = require('express').Router()
-const Blog = require('../models/blog')
-
+const middleware = require("../utils/middleware");
+const blogsRouter = require("express").Router();
+const Blog = require("../models/blog");
 
 // GET /api/blogs
-blogsRouter.get('/', async (request, response, next) => {
+blogsRouter.get("/", async (request, response, next) => {
   try {
-    const blogs = await Blog.find({}).populate('user', { username: 1, name: 1 })
-    response.json(blogs)
+    const blogs = await Blog.find({}).populate("user", {
+      username: 1,
+      name: 1,
+    });
+    response.json(blogs);
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
-blogsRouter.post('/', middleware.userExtractor, async (request, response, next) => {
-  try {
-    const body = request.body
-    const user = request.user
+blogsRouter.post(
+  "/",
+  middleware.userExtractor,
+  async (request, response, next) => {
+    try {
+      const body = request.body;
+      const user = request.user;
 
-    const blog = new Blog({
-      title: body.title,
-      author: body.author,
-      url: body.url,
-      likes: body.likes ?? 0,
-      user: user._id,
-    })
+      const blog = new Blog({
+        title: body.title,
+        author: body.author,
+        url: body.url,
+        likes: body.likes ?? 0,
+        user: user._id,
+      });
 
-    const savedBlog = await blog.save()
+      const savedBlog = await blog.save();
 
-    user.blogs = user.blogs.concat(savedBlog._id)
-    await user.save()
+      user.blogs = user.blogs.concat(savedBlog._id);
+      await user.save();
 
-    const populated = await savedBlog.populate('user', { username: 1, name: 1 })
-    response.status(201).json(populated)
-  } catch (error) {
-    next(error)
-  }
-})
-
+      const populated = await savedBlog.populate("user", {
+        username: 1,
+        name: 1,
+      });
+      response.status(201).json(populated);
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 // DELETE /api/blogs/:id
-blogsRouter.delete('/:id', middleware.userExtractor, async (request, response, next) => {
-  try {
-    const user = request.user
-    const blog = await Blog.findById(request.params.id)
-    
-    if (!blog) {
-      return response.status(404).end()
-    }
-    if (blog.user.toString() !== user._id.toString()) {
-      return response.status(403).json({ error: 'only the creator can delete a blog' })
-    }
+blogsRouter.delete(
+  "/:id",
+  middleware.userExtractor,
+  async (request, response, next) => {
+    try {
+      const user = request.user;
+      const blog = await Blog.findById(request.params.id);
 
-    await Blog.findByIdAndDelete(request.params.id)
-    response.status(204).end()
-  } catch (error) {
-    next(error)
-  }
-})
+      if (!blog) {
+        return response.status(404).end();
+      }
+      if (blog.user.toString() !== user._id.toString()) {
+        return response
+          .status(403)
+          .json({ error: "only the creator can delete a blog" });
+      }
+
+      await Blog.findByIdAndDelete(request.params.id);
+      response.status(204).end();
+    } catch (error) {
+      next(error);
+    }
+  },
+);
 
 // PUT /api/blogs/:id
-blogsRouter.put('/:id', async (request, response, next) => {
+blogsRouter.put("/:id", async (request, response, next) => {
   try {
-    const { title, author, url, likes } = request.body
-    
+    const { title, author, url, likes } = request.body;
+
     const updatedBlog = await Blog.findByIdAndUpdate(
       request.params.id,
-      { title, author, url, likes},
+      { title, author, url, likes },
       {
         new: true,
         runValidators: true,
-        context: 'query',
-      }
-    ).populate('user', { username: 1, name: 1 })
+        context: "query",
+      },
+    ).populate("user", { username: 1, name: 1 });
 
     if (!updatedBlog) {
-      return response.status(404).end()
+      return response.status(404).end();
     }
 
-    response.json(updatedBlog)
+    response.json(updatedBlog);
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
-module.exports = blogsRouter
+module.exports = blogsRouter;
+
+// POST /api/blogs/:id/comments
+blogsRouter.post("/:id/comments", async (request, response, next) => {
+  try {
+    const { comment } = request.body;
+
+    if (!comment || !comment.trim()) {
+      return response.status(400).json({ error: "comment is required" });
+    }
+
+    const blog = await Blog.findById(request.params.id);
+
+    if (!blog) {
+      return response.status(404).json({ error: "blog not found" });
+    }
+
+    blog.comments = blog.comments.concat(comment.trim());
+    const savedBlog = await blog.save();
+
+    const populatedBlog = await savedBlog.populate("user", {
+      username: 1,
+      name: 1,
+    });
+
+    response.status(201).json(populatedBlog);
+  } catch (error) {
+    next(error);
+  }
+});

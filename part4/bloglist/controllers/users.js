@@ -1,50 +1,58 @@
-const bcrypt = require('bcrypt')
-const usersRouter = require('express').Router()
-const User = require('../models/user')
+const bcrypt = require("bcrypt");
+const usersRouter = require("express").Router();
+const User = require("../models/user");
 
-usersRouter.post('/', async (request, response, next) => {
+usersRouter.post("/", async (request, response, next) => {
   try {
-    const { username, name, password } = request.body
+    const { username, name, password } = request.body;
 
     if (!username) {
-      return response.status(400).json({ error: 'username is required' })
+      return response.status(400).json({ error: "username is required" });
     }
 
     if (!password) {
-      return response.status(400).json({ error: 'password is required' })
+      return response.status(400).json({ error: "password is required" });
     }
 
     if (username.length < 3) {
-      return response.status(400).json({ error: 'username must be at least 3 characters long' })
+      return response
+        .status(400)
+        .json({ error: "username must be at least 3 characters long" });
     }
 
     if (password.length < 3) {
-      return response.status(400).json({ error: 'password must be at least 3 characters long' })
+      return response
+        .status(400)
+        .json({ error: "password must be at least 3 characters long" });
     }
 
-    const saltRounds = 10
-    const passwordHash = await bcrypt.hash(password, saltRounds)
+    const saltRounds = 10;
+    const passwordHash = await bcrypt.hash(password, saltRounds);
 
     const user = new User({
       username,
       name,
       passwordHash,
-    })
+    });
 
-    const savedUser = await user.save()
-    response.status(201).json(savedUser)
+    const savedUser = await user.save();
+    response.status(201).json(savedUser);
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
-usersRouter.get('/', async (request, response, next) => {
+usersRouter.get("/", async (request, response, next) => {
   try {
-    const users = await User.find({}).populate('blogs', { title: 1, author: 1, url: 1 })
-    response.json(users)
+    const users = await User.find({}).populate("blogs", {
+      title: 1,
+      author: 1,
+      url: 1,
+    });
+    response.json(users);
   } catch (error) {
-    next(error)
+    next(error);
   }
-})
+});
 
-module.exports = usersRouter
+module.exports = usersRouter;

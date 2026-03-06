@@ -1,6 +1,6 @@
 # 📗 Part 1 — Introduction to React ✔️
 
-Intro to building interactive UIs using **React**.  
+Intro to building interactive UIs using **React**.
 Covers the fundamentals of components, props, state, and event handling.
 
 ---

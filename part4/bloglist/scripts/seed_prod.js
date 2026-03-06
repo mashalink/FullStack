@@ -1,57 +1,90 @@
-require('dotenv').config()
-const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
+require("dotenv").config();
+const mongoose = require("mongoose");
+const bcrypt = require("bcrypt");
 
-const config = require('../utils/config')
-const User = require('../models/user')
-const Blog = require('../models/blog')
+const config = require("../utils/config");
+const User = require("../models/user");
+const Blog = require("../models/blog");
+
+const DEMO_USERNAME = "demo";
+const DEMO_PASSWORD = "demopass";
+
+const demoComments = [
+  "great post",
+  "very useful",
+  "nice article",
+  "thanks for sharing",
+  "interesting read",
+  "helpful content",
+  "good explanation",
+];
+
+const randomInt = (min, max) =>
+  Math.floor(Math.random() * (max - min + 1)) + min;
+
+const randomFrom = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+const buildDemoBlogs = (userId, count = 20) => {
+  return Array.from({ length: count }, (_, index) => {
+    const i = index + 1;
+    const commentCount = randomInt(0, 4);
+    const comments = Array.from({ length: commentCount }, () =>
+      randomFrom(demoComments),
+    );
+
+    return {
+      title: `Demo blog ${i}`,
+      author: `Author ${i % 5 || 5}`,
+      url: `https://example.com/demo-${i}`,
+      likes: randomInt(0, 50),
+      comments,
+      user: userId,
+    };
+  });
+};
 
 const seedProd = async () => {
-  if (process.env.NODE_ENV !== 'production') {
-    console.log('Refusing to seed prod: NODE_ENV is not production')
-    process.exit(1)
+  if (process.env.NODE_ENV !== "production") {
+    throw new Error("Refusing to seed: NODE_ENV is not production");
   }
 
-  console.log('Seeding PROD DB (safe mode)')
-  await mongoose.connect(config.MONGODB_URI, { family: 4 })
+  console.log("Seeding PROD DB in safe mode...");
+  console.log("Mongo URI:", config.MONGODB_URI);
 
-  // ❌ НИКАКИХ deleteMany
+  await mongoose.connect(config.MONGODB_URI, { family: 4 });
 
-  const existing = await User.findOne({ username: 'demo' })
-  if (existing) {
-    console.log('Demo user already exists, skipping seed')
-    process.exit(0)
+  const existingUser = await User.findOne({ username: DEMO_USERNAME });
+
+  if (existingUser) {
+    console.log(`Demo user "${DEMO_USERNAME}" already exists. Skipping seed.`);
+    return;
   }
 
-  const passwordHash = await bcrypt.hash('demopass', 10)
+  const passwordHash = await bcrypt.hash(DEMO_PASSWORD, 10);
 
   const demoUser = await new User({
-    username: 'demo',
-    name: 'Demo User',
+    username: DEMO_USERNAME,
+    name: "Demo User",
     passwordHash,
-  }).save()
+  }).save();
 
-  const blogs = []
+  const blogs = buildDemoBlogs(demoUser._id, 20);
+  const savedBlogs = await Blog.insertMany(blogs);
 
-  for (let i = 1; i <= 20; i++) {
-    blogs.push({
-      title: `Demo blog ${i}`,
-      author: `Author ${i % 5}`,
-      url: `https://example.com/demo-${i}`,
-      likes: Math.floor(Math.random() * 50),
-      user: demoUser._id,
-    })
-  }
+  demoUser.blogs = savedBlogs.map((blog) => blog._id);
+  await demoUser.save();
 
-  const savedBlogs = await Blog.insertMany(blogs)
-  demoUser.blogs = savedBlogs.map(b => b._id)
-  await demoUser.save()
+  console.log("Seed completed successfully.");
+  console.log(`Created user: ${demoUser.username}`);
+  console.log(`Created blogs: ${savedBlogs.length}`);
+};
 
-  console.log(`Seeded PROD demo data: ${savedBlogs.length} blogs`)
-  await mongoose.connection.close()
-}
-
-seedProd().catch(err => {
-  console.error(err)
-  process.exit(1)
-})
+seedProd()
+  .catch((error) => {
+    console.error("Seeding failed:");
+    console.error(error);
+    process.exitCode = 1;
+  })
+  .finally(async () => {
+    await mongoose.connection.close();
+  });

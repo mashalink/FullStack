@@ -1,10 +1,10 @@
-const { defineConfig } = require('@playwright/test')
+const { defineConfig } = require("@playwright/test");
 
 module.exports = defineConfig({
-  testDir: './tests',
+  testDir: "./tests",
   workers: 1,
   use: {
-    baseURL: 'http://localhost:5173',
+    baseURL: "http://localhost:5173",
     headless: true,
   },
-})
+});
