@@ -1,15 +1,9 @@
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-// import { Routes, Route, Link, Navigate } from "react-router-dom";
 
-import BlogForm from "./components/BlogForm";
-import Blogs from "./components/Blogs";
-import LoginForm from "./components/LoginForm";
-import Notification from "./components/Notification";
-import Togglable from "./components/Togglable";
-import Users from "./components/Users";
+import LoginView from "./components/LoginView";
+import MainLayout from "./components/MainLayout";
 import { useAuth } from "./hooks/useAuth";
-import { useBlogs } from "./hooks/useBlogs";
 
 import { initializeBlogs } from "./reducers/blogsReducer";
 import { initializeUser } from "./reducers/userReducer";
@@ -20,7 +14,6 @@ const App = () => {
   const user = useSelector((state) => state.user);
   const blogs = useSelector((state) => state.blogs);
 
-  const { addBlog, likeBlog, deleteBlog } = useBlogs();
   const {
     username,
     password,
@@ -38,55 +31,19 @@ const App = () => {
     dispatch(initializeBlogs());
   }, [dispatch]);
 
-  const blogFormRef = useRef();
-
-  if (user === null) {
+  if (!user) {
     return (
-      <div>
-        <Notification />
-        <LoginForm
-          username={username}
-          password={password}
-          setUsername={setUsername}
-          setPassword={setPassword}
-          onLogin={handleLogin}
-        />
-      </div>
+      <LoginView
+        username={username}
+        password={password}
+        setUsername={setUsername}
+        setPassword={setPassword}
+        handleLogin={handleLogin}
+      />
     );
   }
 
-  return (
-    <div>
-      <h2>Blogs</h2>
-      <Notification />
-
-      <div>
-        {user.name} logged in{" "}
-        <button type="button" onClick={handleLogout}>
-          logout
-        </button>
-      </div>
-
-      <br />
-
-      <Togglable buttonLabel="create new blog" ref={blogFormRef}>
-        <BlogForm createBlog={(blog) => addBlog(blog, blogFormRef)} />
-      </Togglable>
-
-      <br />
-
-      <Users />
-
-      <Blogs
-        blogs={blogs}
-        user={user}
-        onLike={likeBlog}
-        onRemove={deleteBlog}
-      />
-
-      <br />
-    </div>
-  );
+  return <MainLayout user={user} blogs={blogs} handleLogout={handleLogout} />;
 };
 
 export default App;
