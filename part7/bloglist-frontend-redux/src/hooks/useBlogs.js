@@ -1,5 +1,6 @@
 import { useDispatch } from 'react-redux'
 import {
+  commentBlog as commentBlogAction,
   createBlog,
   deleteBlog as deleteBlogAction,
   likeBlog as likeBlogAction,
@@ -53,9 +54,22 @@ export const useBlogs = () => {
     }
   }
 
+  const commentBlog = async (blog, comment) => {
+    try {
+      const updated = await dispatch(commentBlogAction(blog.id, comment))
+      notify('comment added', 'info', 4)
+      return updated
+    } catch (exception) {
+      console.log(exception)
+      notify('failed to add comment', 'error', 5)
+      throw exception
+    }
+  }
+
   return {
     addBlog,
     likeBlog,
     deleteBlog,
+    commentBlog,
   }
 }
