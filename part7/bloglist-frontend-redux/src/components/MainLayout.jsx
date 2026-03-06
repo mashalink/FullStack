@@ -2,6 +2,7 @@ import { Link, Route, Routes } from "react-router-dom";
 
 import BlogsView from "./BlogsView";
 import Header from "./Header";
+import User from "./User";
 import Users from "./Users";
 
 const MainLayout = ({ user, blogs, handleLogout }) => {
@@ -16,6 +17,7 @@ const MainLayout = ({ user, blogs, handleLogout }) => {
       <Routes>
         <Route path="/" element={<BlogsView blogs={blogs} user={user} />} />
         <Route path="/users" element={<Users />} />
+        <Route path="/users/:id" element={<User />} />
       </Routes>
     </div>
   );

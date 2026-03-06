@@ -27,7 +27,7 @@ const Users = () => {
               <td>
                 <Link to={`/users/${user.id}`}>{user.name}</Link>
               </td>
-              <td>{user.blogs.length}</td>
+              <td>{user.blogs?.length ?? 0}</td>
             </tr>
           ))}
         </tbody>
