@@ -5,7 +5,6 @@ import Blogs from "../components/Blogs";
 import Togglable from "../components/Togglable";
 
 import { useBlogs } from "../hooks/useBlogs";
-import blogs from "../services/blogs";
 
 const BlogsView = () => {
   const { addBlog } = useBlogs();
@@ -20,7 +19,7 @@ const BlogsView = () => {
 
       <br />
 
-      <Blogs blogs={blogs} />
+      <Blogs />
     </div>
   );
 };

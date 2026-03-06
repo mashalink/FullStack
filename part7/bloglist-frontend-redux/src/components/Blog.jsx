@@ -1,16 +1,30 @@
 import { useSelector } from "react-redux";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { useBlogs } from "../hooks/useBlogs";
 
 const Blog = () => {
   const { id } = useParams();
+  const navigate = useNavigate();
+
   const blogs = useSelector((state) => state.blogs);
+  const currentUser = useSelector((state) => state.user);
+
   const blog = blogs.find((b) => b.id === id);
   const { likeBlog, deleteBlog } = useBlogs();
 
   if (!blog) {
-    return <div>loading...</div>;
+    return <div>blog not found</div>;
   }
+
+  const canRemove =
+    blog.user?.username === currentUser?.username ||
+    blog.user?.id === currentUser?.id;
+
+  const handleDelete = async () => {
+    await deleteBlog(blog);
+    navigate("/");
+  };
+
   return (
     <div>
       <h1>{blog.title}</h1>
@@ -25,9 +39,13 @@ const Blog = () => {
       </div>
       <div>added by {blog.user?.name || blog.user?.username || "unknown"}</div>
       <div>
-        <button type="button" onClick={() => deleteBlog(blog)}>
-          delete
-        </button>
+        {canRemove && (
+          <div>
+            <button type="button" onClick={handleDelete}>
+              delete
+            </button>
+          </div>
+        )}
       </div>
     </div>
   );
