@@ -1,8 +1,47 @@
-# React + Vite
+# Bloglist Frontend (Redux) — Part 7
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Frontend for the FullStack Open bloglist app with React Router 7 and Redux Toolkit.
 
-Currently, two official plugins are available:
+## Stack
+- React + Vite
+- Redux Toolkit
+- React Router v7
+- Axios
+- Vitest + Testing Library
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+## Features
+- Login / logout with persisted session (localStorage)
+- List blogs sorted by likes
+- View single blog with likes, delete (owner only), and comments
+- Create new blog entries via form
+- Notifications for errors/success
+
+## Getting started
+```bash
+cd part7/bloglist-frontend-redux
+npm install
+npm run dev
+```
+App runs on http://localhost:5173 by default.
+
+### Backend
+Requires the bloglist API from Part 4 running locally (default http://localhost:3003) or another compatible deployment. Update `src/services/blogs.js` base URL if needed.
+
+## Tests
+```bash
+npm test        # vitest unit/integration tests
+npm run lint    # eslint
+```
+
+## Build
+```bash
+npm run build
+npm run preview
+```
+
+## Deployment
+- Planned Render deployment: **[Live app link here](https://render.com/)** (add actual URL when deployed).
+
+## Notes
+- Uses custom theming variables defined in `src/index.css`.
+- Routing is configured in `src/main.jsx` and `src/views/MainLayout.jsx`.

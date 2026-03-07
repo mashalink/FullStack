@@ -4,16 +4,17 @@ import Blog from '../components/Blog'
 import Notification from '../components/Notification'
 import BlogsView from './BlogsView'
 import User from './User'
-
 import NavBar from '../components/NavBar'
 import Users from './Users'
 
 const MainLayout = ({ user, blogs, handleLogout }) => {
   return (
-    <div>
+    <div style={{ minHeight: '100vh', background: 'var(--off)' }}>
       <NavBar user={user} onLogout={handleLogout} />
 
-      <Notification />
+      <div style={{ maxWidth: 1100, margin: '0 auto', padding: '32px 40px 0' }}>
+        <Notification />
+      </div>
 
       <Routes>
         <Route path="/" element={<BlogsView blogs={blogs} user={user} />} />

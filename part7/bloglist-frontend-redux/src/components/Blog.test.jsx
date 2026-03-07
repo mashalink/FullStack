@@ -1,33 +1,59 @@
 import { render, screen } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { vi } from 'vitest'
+import { configureStore } from '@reduxjs/toolkit'
+import { Provider } from 'react-redux'
+import { MemoryRouter, Route, Routes } from 'react-router-dom'
+import { beforeEach, describe, expect, test, vi } from 'vitest'
+import blogsReducer from '../reducers/blogsReducer'
+import userReducer from '../reducers/userReducer'
 import Blog from './Blog'
 
+const mockLikeBlog = vi.fn()
+const mockDeleteBlog = vi.fn()
+const mockCommentBlog = vi.fn()
+
+vi.mock('../hooks/useBlogs', () => ({
+  useBlogs: () => ({
+    likeBlog: mockLikeBlog,
+    deleteBlog: mockDeleteBlog,
+    commentBlog: mockCommentBlog,
+  }),
+}))
+
+const renderWithProviders = (blog, currentUser) => {
+  const store = configureStore({
+    reducer: {
+      blogs: blogsReducer,
+      user: userReducer,
+    },
+    preloadedState: {
+      blogs: [blog],
+      user: currentUser,
+    },
+  })
+
+  return render(
+    <Provider store={store}>
+      <MemoryRouter initialEntries={[`/blogs/${blog.id}`]}>
+        <Routes>
+          <Route path="/blogs/:id" element={<Blog />} />
+          <Route path="/" element={<div>home</div>} />
+        </Routes>
+      </MemoryRouter>
+    </Provider>,
+  )
+}
+
 describe('Blog component', () => {
-  test('5.13 renders title and author, but not url or likes by default', () => {
-    const blog = {
-      title: 'Testing blog',
-      author: 'Bulka',
-      url: 'https://example.com',
-      likes: 10,
-      user: { name: 'Creator' },
-    }
-
-    const { container } = render(<Blog blog={blog} onLike={() => {}} />)
-
-    // title + author should be visible
-    const title = container.querySelector('.blogTitle')
-    expect(title).toHaveTextContent('Testing blog')
-    expect(title).toHaveTextContent('Bulka')
-
-    // url and likes should not be visible
-    const details = container.querySelector('.blogDetails')
-    expect(details).toBeNull()
+  beforeEach(() => {
+    mockLikeBlog.mockReset()
+    mockDeleteBlog.mockReset()
+    mockCommentBlog.mockReset()
   })
-  test('5.14 shows url and likes when view button is clicked', async () => {
-    const user = userEvent.setup()
 
+  test('5.13 renders blog title and likes', () => {
     const blog = {
+      id: '1',
       title: 'Testing blog',
       author: 'Bulka',
       url: 'https://example.com',
@@ -35,20 +61,16 @@ describe('Blog component', () => {
       user: { name: 'Creator' },
     }
 
-    const { container } = render(<Blog blog={blog} onLike={() => {}} />)
+    renderWithProviders(blog, { username: 'visitor' })
 
-    await user.click(screen.getByText('view'))
-
-    const details = container.querySelector('.blogDetails')
-    expect(details).toBeInTheDocument()
-    expect(details).toHaveTextContent('https://example.com')
-    expect(details).toHaveTextContent('likes 10')
+    expect(screen.getByRole('heading', { level: 1 })).toHaveTextContent('Testing blog')
+    expect(screen.getByText(/10 likes/i)).toBeInTheDocument()
   })
-  test('5.15 calls onLike handler twice when like button is clicked twice', async () => {
-    const user = userEvent.setup()
-    const mockLikeHandler = vi.fn()
 
+  test('5.14 calls like handler when like button is clicked', async () => {
+    const user = userEvent.setup()
     const blog = {
+      id: '2',
       title: 'Testing blog',
       author: 'Bulka',
       url: 'https://example.com',
@@ -56,14 +78,31 @@ describe('Blog component', () => {
       user: { name: 'Creator' },
     }
 
-    render(<Blog blog={blog} onLike={mockLikeHandler} />)
+    renderWithProviders(blog, { username: 'visitor' })
 
-    await user.click(screen.getByText('view'))
+    const likeButton = screen.getAllByRole('button', { name: /like/i })[0]
+    await user.click(likeButton)
 
-    const likeButton = screen.getByText('like')
+    expect(mockLikeBlog).toHaveBeenCalledTimes(1)
+  })
+
+  test('5.15 calls like handler twice when like button is clicked twice', async () => {
+    const user = userEvent.setup()
+    const blog = {
+      id: '3',
+      title: 'Testing blog',
+      author: 'Bulka',
+      url: 'https://example.com',
+      likes: 10,
+      user: { name: 'Creator' },
+    }
+
+    renderWithProviders(blog, { username: 'visitor' })
+
+    const likeButton = screen.getAllByRole('button', { name: /like/i })[0]
     await user.click(likeButton)
     await user.click(likeButton)
 
-    expect(mockLikeHandler).toHaveBeenCalledTimes(2)
+    expect(mockLikeBlog).toHaveBeenCalledTimes(2)
   })
 })

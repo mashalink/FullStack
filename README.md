@@ -36,6 +36,8 @@ The course covers modern full-stack development using:
   - `redux-anecdotes` — Redux Toolkit slices + async thunks against `json-server`; filtering and timed notifications.
   - `query-anecdotes` — TanStack Query v5 with caching/retries, optimistic vote updates, and backend validation errors surfaced via notifications.
   - `unicafe-redux` — minimal Redux feedback counter using manual store subscriptions.
+- **Part 7:** React Router, custom hooks, styling
+  - `bloglist-frontend-redux` — Redux Toolkit + React Router 7, blog CRUD UI with comments/likes, notifications, persisted auth.
 
 #### Quick start for Part 5 E2E
 
@@ -49,11 +51,19 @@ The course covers modern full-stack development using:
 - React Query: `cd part6/query-anecdotes && npm install && npm run server` (http://localhost:3001) in one terminal, then `npm run dev` (http://localhost:5173) in another. Validation rejects anecdotes < 5 chars.
   > Only one json-server can listen on port 3001 at a time.
 
+#### Quick start for Part 7 (bloglist Redux)
+
+- Backend: `cd part4/bloglist && npm install && npm run dev` (http://localhost:3003).
+- Frontend: `cd part7/bloglist-frontend-redux && npm install && npm run dev` (http://localhost:5173).
+- Tests: `npm test` (Vitest + Testing Library).
+- Build: `npm run build` / `npm run preview`.
+> Deployment (Render) link will be added after publish.
+
 ---
 
 ### 🚧 In Progress
 
-- Part 7: React Router, custom hooks, styling, Webpack
+- None right now
 
 ### Upcoming Course Parts
 
