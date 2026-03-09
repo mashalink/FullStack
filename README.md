@@ -37,7 +37,7 @@ The course covers modern full-stack development using:
   - `query-anecdotes` — TanStack Query v5 with caching/retries, optimistic vote updates, and backend validation errors surfaced via notifications.
   - `unicafe-redux` — minimal Redux feedback counter using manual store subscriptions.
 - **Part 7:** React Router, custom hooks, styling
-  - `bloglist-frontend-redux` — Redux Toolkit + React Router 7, blog CRUD UI with comments/likes, notifications, persisted auth.
+  - `bloglist-frontend-redux` — Redux Toolkit + React Router 7, blog CRUD UI with comments/likes, notifications, persisted auth. Live: https://bloglist-dunc.onrender.com/ (demo login: `demo` / `demopass`).
 
 #### Quick start for Part 5 E2E
 
@@ -49,7 +49,7 @@ The course covers modern full-stack development using:
 
 - Redux Toolkit: `cd part6/redux-anecdotes && npm install && npm run server` (http://localhost:3001) in one terminal, then `npm run dev` (http://localhost:5173) in another.
 - React Query: `cd part6/query-anecdotes && npm install && npm run server` (http://localhost:3001) in one terminal, then `npm run dev` (http://localhost:5173) in another. Validation rejects anecdotes < 5 chars.
-  > Only one json-server can listen on port 3001 at a time.
+> Only one json-server can listen on port 3001 at a time.
 
 #### Quick start for Part 7 (bloglist Redux)
 
@@ -57,7 +57,7 @@ The course covers modern full-stack development using:
 - Frontend: `cd part7/bloglist-frontend-redux && npm install && npm run dev` (http://localhost:5173).
 - Tests: `npm test` (Vitest + Testing Library).
 - Build: `npm run build` / `npm run preview`.
-> Deployment (Render) link will be added after publish.
+- Deployment: https://bloglist-dunc.onrender.com/ (demo login: `demo` / `demopass`).
 
 ---
 

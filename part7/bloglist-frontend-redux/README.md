@@ -40,7 +40,8 @@ npm run preview
 ```
 
 ## Deployment
-- Planned Render deployment: **[Live app link here](https://render.com/)** (add actual URL when deployed).
+- Live (Render): **https://bloglist-dunc.onrender.com/**
+- Demo credentials: `demo` / `demopass`
 
 ## Notes
 - Uses custom theming variables defined in `src/index.css`.
