@@ -11,7 +11,7 @@
     "seed:dev": "cross-env NODE_ENV=development node scripts/seed_dev.js",
     "seed:prod": "cross-env NODE_ENV=production node scripts/seed_prod.js",
     "lint": "eslint .",
-    "build:ui": "cd ../../part7/bloglist-frontend-redux && npm run build && cp -r dist ../../part4/bloglist/dist",
+    "build:ui": "cd ../../part7/bloglist-frontend-redux && npm install && npm run build && cp -r dist ../../part4/bloglist/dist",
     "build": "npm run build:ui"
   },
   "keywords": [],
