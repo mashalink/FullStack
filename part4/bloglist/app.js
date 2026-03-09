@@ -1,6 +1,7 @@
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const path = require("path");
 
 const config = require("./utils/config");
 const logger = require("./utils/logger");
@@ -28,7 +29,7 @@ app.use(cors());
 app.use(express.json());
 
 app.use(middleware.requestLogger);
-app.use(middleware.tokenExtractor); // <- before the routers
+app.use(middleware.tokenExtractor);
 
 logger.info("NODE_ENV:", process.env.NODE_ENV);
 logger.info("Mongo URI:", config.MONGODB_URI);
@@ -40,6 +41,11 @@ if (process.env.NODE_ENV === "test") {
 app.use("/api/blogs", blogsRouter);
 app.use("/api/users", usersRouter);
 app.use("/api/login", loginRouter);
+
+app.use(express.static(path.join(__dirname, "dist")));
+app.get("/{*path}", (req, res) => {
+  res.sendFile(path.join(__dirname, "dist", "index.html"));
+});
 
 app.use(middleware.unknownEndpoint);
 app.use(middleware.errorHandler);
