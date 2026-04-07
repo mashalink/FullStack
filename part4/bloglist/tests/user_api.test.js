@@ -1,14 +1,18 @@
-const { test, describe, beforeEach, after } = require("node:test");
+const { test, describe, before, beforeEach, after } = require("node:test");
 const assert = require("node:assert");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const bcrypt = require("bcrypt");
 
-const app = require("../app");
+const { app, mongoConnection } = require("../app");
 const User = require("../models/user");
 const helper = require("./test_helper");
 
 const api = supertest(app);
+
+before(async () => {
+  await mongoConnection;
+});
 
 describe("user creation", () => {
   beforeEach(async () => {
@@ -139,5 +143,6 @@ describe("users with blogs (4.17)", () => {
 });
 
 after(async () => {
+  await mongoConnection.catch(() => null);
   await mongoose.connection.close();
 });
