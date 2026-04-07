@@ -1,30 +1,37 @@
-execises 1.1. - 1.14.
+# Unicafe
 
-The application called part1, navigate to its directory and install the libraries:
+React feedback app for collecting `good`, `neutral`, and `bad` votes and showing derived statistics.
 
-# npm 6.x (outdated, but still used by some):
+## Stack
 
-npm create vite@latest part1 --template react
+- React
+- Vite
+- ESLint
 
-# npm 7+, extra double-dash is needed:
+## Features
 
-npm create vite@latest part1 -- --template react
+- records feedback in three categories
+- shows total feedback count, average score, and positive percentage
+- displays a `No feedback given` state before any votes exist
+- demonstrates conditional rendering and derived values from state
 
-The application runs:
+## Run Locally
+
+```bash
+cd part1/unicafe
+npm install
 npm run dev
+```
 
-The application runs on localhost 3000:
-http://localhost:5173/ or next
+Default local URL: `http://localhost:5173`
 
-The files App.css, App.test.js, index.css, logo.svg, setupTests.js and reportWebVitals.js may be deleted as they are not needed in our application right now.
+## Scripts
 
-In some situations you may also have to run the command below from the root of the project:
-rm -rf node_modules/ && npm i
-(If and when you encounter an error message
-Objects are not valid as a React child)
+- `npm run dev` - start the Vite dev server
+- `npm run build` - create a production build
+- `npm run lint` - run ESLint
+- `npm run preview` - preview the production build locally
 
-Notes for me:
-Create an application:
-npx create-react-app name_for_folder
+## Notes
 
-    cd name_for_folder
+- Exercise range: `1.6-1.11`

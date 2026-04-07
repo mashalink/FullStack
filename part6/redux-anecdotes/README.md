@@ -1,12 +1,49 @@
-# React + Vite
+# Redux Anecdotes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Anecdote application built with Redux Toolkit and a local `json-server` backend.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- Redux Toolkit
+- React Redux
+- Vite
+- `json-server`
+- ESLint
 
-## Expanding the ESLint configurations
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- loads anecdotes from a backend with async thunks
+- creates new anecdotes
+- votes on existing anecdotes
+- filters anecdotes in the UI
+- shows timed notifications for async actions
+
+## Run Locally
+
+Start the backend helper:
+
+```bash
+cd part6/redux-anecdotes
+npm install
+npm run server
+```
+
+Start the frontend in another terminal:
+
+```bash
+cd part6/redux-anecdotes
+npm run dev
+```
+
+## Scripts
+
+- `npm run dev` - start the Vite dev server
+- `npm run server` - start `json-server` on `http://localhost:3001`
+- `npm run lint` - run ESLint
+- `npm run build` - create a production build
+- `npm run preview` - preview the production build locally
+
+## Notes
+
+- Anecdotes are served from the local backend on port `3001`.

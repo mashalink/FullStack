@@ -1,6 +1,6 @@
-# Courseinfo
+# Anecdotes
 
-Small React app for rendering a course name, its parts, and the total number of exercises.
+React app for browsing random software anecdotes and voting on them.
 
 ## Stack
 
@@ -10,15 +10,15 @@ Small React app for rendering a course name, its parts, and the total number of 
 
 ## Features
 
-- renders the course title
-- renders the list of course parts and exercise counts
-- calculates and displays the total number of exercises
-- demonstrates basic component composition with props
+- shows a random anecdote from a fixed list
+- lets the user vote for the currently visible anecdote
+- tracks vote counts in component state
+- displays the anecdote with the highest number of votes
 
 ## Run Locally
 
 ```bash
-cd part1/courseinfo
+cd part1/anecdotes
 npm install
 npm run dev
 ```
@@ -34,4 +34,4 @@ Default local URL: `http://localhost:5173`
 
 ## Notes
 
-- Exercise range: `1.1-1.5`
+- Exercise range: `1.12-1.14`

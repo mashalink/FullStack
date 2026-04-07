@@ -1,12 +1,40 @@
-# React + Vite
+# Unicafe Redux
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Minimal Redux version of the Unicafe feedback app.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- Redux
+- Vite
+- Vitest
+- ESLint
 
-## Expanding the ESLint configuration
+## Features
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+- dispatches feedback actions for `good`, `ok`, and `bad`
+- supports resetting the counters
+- renders directly from a Redux store subscription
+- includes reducer-level tests
+
+## Run Locally
+
+```bash
+cd part6/unicafe-redux
+npm install
+npm run dev
+```
+
+Default local URL: `http://localhost:5173`
+
+## Scripts
+
+- `npm run dev` - start the Vite dev server
+- `npm run test` - run Vitest tests
+- `npm run lint` - run ESLint
+- `npm run build` - create a production build
+- `npm run preview` - preview the production build locally
+
+## Notes
+
+- This project intentionally keeps Redux usage minimal to show the core ideas without abstractions.

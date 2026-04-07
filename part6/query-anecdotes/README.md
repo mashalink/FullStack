@@ -1,16 +1,48 @@
-# React + Vite
+# Query Anecdotes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Anecdote application built with TanStack Query and a custom local backend.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Babel](https://babeljs.io/) (or [oxc](https://oxc.rs) when used in [rolldown-vite](https://vite.dev/guide/rolldown)) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- TanStack Query
+- Vite
+- custom Node server
+- ESLint
 
-## React Compiler
+## Features
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+- fetches anecdotes with query caching and retry control
+- creates new anecdotes through mutations
+- votes on anecdotes and refreshes cached data
+- shows notifications for successful actions and failures
+- surfaces backend validation errors in the UI
 
-## Expanding the ESLint configuration
+## Run Locally
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+Start the backend helper:
+
+```bash
+cd part6/query-anecdotes
+npm install
+npm run server
+```
+
+Start the frontend in another terminal:
+
+```bash
+cd part6/query-anecdotes
+npm run dev
+```
+
+## Scripts
+
+- `npm run dev` - start the Vite dev server
+- `npm run server` - start the custom backend on `http://localhost:3001`
+- `npm run lint` - run ESLint
+- `npm run build` - create a production build
+- `npm run preview` - preview the production build locally
+
+## Notes
+
+- The backend validates anecdote length and rejects entries shorter than five characters.

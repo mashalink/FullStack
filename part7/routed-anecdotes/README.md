@@ -1,8 +1,38 @@
-# React + Vite
+# Routed Anecdotes
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+React Router exercise app for browsing and creating software anecdotes.
 
-Currently, two official plugins are available:
+## Stack
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- React
+- React Router
+- Vite
+- ESLint
+
+## Features
+
+- routed pages for the anecdote list, about page, and creation form
+- detail view for individual anecdotes
+- in-memory anecdote creation
+- notification message after creating a new anecdote
+
+## Run Locally
+
+```bash
+cd part7/routed-anecdotes
+npm install
+npm run dev
+```
+
+Default local URL: `http://localhost:5173`
+
+## Scripts
+
+- `npm run dev` - start the Vite dev server
+- `npm run lint` - run ESLint
+- `npm run build` - create a production build
+- `npm run preview` - preview the production build locally
+
+## Notes
+
+- This project uses local component state only; no backend is required.

@@ -1,40 +1,48 @@
-# Part 5 – Bloglist Frontend & E2E
+# Part 5 - Testing React Apps
 
-`part5` contains two sibling projects: the blog UI and its end‑to‑end Playwright tests.
+This part contains the bloglist frontend and its end-to-end Playwright test suite.
 
-## bloglist-frontend
+## Projects
 
-- React + Vite SPA: login, create blog, like, delete, sort by likes.
-- Key components: `App.jsx` (auth + data loading + sorting), `Blog.jsx` (card with toggle/details, like/delete), `BlogForm.jsx`, `Togglable.jsx`, `Notification.jsx`.
-- Stores the user JWT in `localStorage` under `loggedBlogappUser` and passes it to `blogService`.
-- UI sorting: `blogs` are sorted by `likes` descending before render.
+| Path | Description |
+| --- | --- |
+| `bloglist-frontend` | React blog UI with login, create, like, delete, sorting, and component tests |
+| `bloglist-e2e` | Playwright suite for login and blog interaction flows |
 
-Run:
+## Covered Work
 
-- `npm install`
-- `npm run dev` (default http://localhost:5173)
-- `npm run test` — Vitest + Testing Library unit/integration tests.
-- `npm run lint` — ESLint.
+- testing React components with Vitest and Testing Library
+- writing end-to-end tests with Playwright
+- validating authenticated UI flows
+- testing blog creation, liking, deletion, and ordering
 
-Environment:
+## Run Locally
 
-- Requires a backend at `http://localhost:3003` with `/api/login`, `/api/blogs`, `/api/users`, and `/api/testing/reset` (for tests). Start backend in test mode via `npm run start:test` inside `part4/bloglist` (uses `NODE_ENV=test`).
+Backend:
 
-## bloglist-e2e
+```bash
+cd part4/bloglist
+npm install
+npm run start:test
+```
 
-- Playwright test suite (`tests/blog_app.spec.js`) against the same frontend and test backend.
-- Scenarios: login (success/failure), create, like, delete, delete visibility for author only, ordering by likes.
-- Config: `playwright.config.js` sets `workers: 1`, baseURL `http://localhost:5173`.
-- Tests run in serial mode inside the describe to avoid data races.
+Frontend:
 
-Run:
+```bash
+cd part5/bloglist-frontend
+npm install
+npm run dev
+```
 
-- `npm install`
-- Download browsers once: `npx playwright install`
-- Ensure backend is running at `http://localhost:3003` and frontend at `http://localhost:5173`.
-- `npm test` — runs `playwright test`.
+E2E tests:
 
-Notes:
+```bash
+cd part5/bloglist-e2e
+npm install
+npm test
+```
 
-- Each test resets data via `/api/testing/reset`, then creates users `testuser` and `otheruser` (password `password123`).
-- Tests rely on labels/button text; if UI text changes, update the specs accordingly.
+## Notes
+
+- The frontend uses a Vite proxy to forward `/api` requests to `http://localhost:3003`.
+- Playwright tests expect the Part 4 backend to expose `/api/testing/reset` in test mode.

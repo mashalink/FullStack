@@ -1,25 +1,23 @@
-## 📘 Part 0 — Fundamentals of Web Apps ✔️
+# Part 0 - Fundamentals of Web Apps
 
-This section covers the core ideas of how the web works:
+This part contains diagrams and notes about how browsers, forms, and servers interact in traditional and single-page applications.
 
-- What happens behind the scenes when loading a webpage
-- Basics of HTTP (requests, responses, status codes)
-- Browser rendering process
-- Forms and DOM events
-- Sequence diagrams describing browser–server communication
+## Contents
 
-### ✔️ Completed Exercises (0.1 – 0.6)
+| Path | Description |
+| --- | --- |
+| [0.4](./0.4) | sequence diagram for creating a new note in the classic app |
+| [0.5](./0.5) | sequence diagram for loading the single-page app |
+| [0.6](./0.6) | sequence diagram for creating a new note in the SPA |
 
-**Topics practiced:**
+## Covered Work
 
-- Reading and interpreting network diagrams
-- Understanding request/response flow
-- Using browser DevTools (Network, Console)
-- Describing step-by-step how an app loads and communicates with a server
+- request and response flow in the browser
+- basics of HTTP and status codes
+- browser rendering and DOM updates
+- sequence diagrams for classic and SPA behavior
 
-### 📝 Notes for myself
+## Notes
 
-Console shortcut (Mac):
-Option + Cmd + I
-
-Browser Network tab is essential for following requests during the course.
+- This part contains documentation artifacts only; there is no runnable application.
+- Browser DevTools and the Network tab were the main tools used for the exercises.

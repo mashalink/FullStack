@@ -1,48 +1,51 @@
-# Bloglist Frontend (Redux) — Part 7
+# Bloglist Frontend (Redux)
 
-Frontend for the FullStack Open bloglist app with React Router 7 and Redux Toolkit.
+Part 7 bloglist frontend built with React Router and Redux Toolkit.
 
 ## Stack
-- React + Vite
+
+- React
+- Vite
 - Redux Toolkit
-- React Router v7
+- React Router
 - Axios
-- Vitest + Testing Library
+- Tailwind CSS
+- Vitest
+- Testing Library
+- ESLint
 
 ## Features
-- Login / logout with persisted session (localStorage)
-- List blogs sorted by likes
-- View single blog with likes, delete (owner only), and comments
-- Create new blog entries via form
-- Notifications for errors/success
 
-## Getting started
+- login and logout with persisted session
+- routed views for blogs and related data
+- create, like, delete, and comment on blogs
+- notifications for success and error states
+- blogs sorted by likes
+
+## Run Locally
+
 ```bash
 cd part7/bloglist-frontend-redux
 npm install
 npm run dev
 ```
-App runs on http://localhost:5173 by default.
 
-### Backend
-Requires the bloglist API from Part 4 running locally (default http://localhost:3003) or another compatible deployment. Update `src/services/blogs.js` base URL if needed.
+Default local URL: `http://localhost:5173`
 
-## Tests
-```bash
-npm test        # vitest unit/integration tests
-npm run lint    # eslint
-```
+## Scripts
 
-## Build
-```bash
-npm run build
-npm run preview
-```
+- `npm run dev` - start the Vite dev server
+- `npm run test` - run Vitest test suites
+- `npm run lint` - run ESLint
+- `npm run build` - create a production build
+- `npm run preview` - preview the production build locally
 
 ## Deployment
-- Live (Render): **https://bloglist-dunc.onrender.com/**
+
+- Live: `https://bloglist-dunc.onrender.com/`
 - Demo credentials: `demo` / `demopass`
 
 ## Notes
-- Uses custom theming variables defined in `src/index.css`.
-- Routing is configured in `src/main.jsx` and `src/views/MainLayout.jsx`.
+
+- The Vite dev server proxies `/api` requests to `http://localhost:3003`.
+- This frontend is designed to work with the Part 4 bloglist backend.

@@ -1,30 +1,34 @@
-# 📗 Part 1 — Introduction to React ✔️
+# Part 1 - Introduction to React
 
-Intro to building interactive UIs using **React**.
-Covers the fundamentals of components, props, state, and event handling.
+This part introduces React fundamentals: components, props, state, event handling, forms, and rendering dynamic lists.
 
----
+## Projects
 
-## 🔍 Covered Concepts
+| Path | Focus |
+| --- | --- |
+| `courseinfo` | component composition and exercise totals |
+| `unicafe` | feedback counters, statistics, and conditional rendering |
+| `anecdotes` | anecdote voting and state-driven UI updates |
 
-- React components (functions returning JSX)
-- Props & component composition
-- useState
-- Handling events
-- Conditional rendering
-- Rendering lists & using keys
-- Forms and controlled inputs
+## Covered Work
 
----
+- building React components with JSX
+- passing data with props
+- managing local component state with `useState`
+- handling user events and controlled inputs
+- rendering lists and computing derived values
 
-## ✅ Completed Exercises (1.1–1.14)
+## Run Locally
 
-All sub-exercises fully implemented, including:
+Each project is a separate Vite app:
 
-- Course information (1.1–1.5)
-- Unicafe feedback app (1.6–1.11)
-- Anecdotes voting app (1.12–1.14)
+```bash
+cd part1/<project>
+npm install
+npm run dev
+```
 
-✔️ All tasks done and working.
+## Notes
 
----
+- Completed exercises: `1.1-1.14`
+- The projects in this part are independent and do not share dependencies or runtime state.

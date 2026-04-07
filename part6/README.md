@@ -1,45 +1,35 @@
-# Part 6 – Advanced State Management
+# Part 6 - Advanced State Management
 
-This part contains three small apps that explore Redux and React Query patterns.
+This part compares different state-management approaches across small React applications.
 
-## unicafe-redux
+## Projects
 
-- Minimal Redux counter for feedback buttons (`good | ok | bad | reset`).
-- Uses a single reducer and manual `store.subscribe(renderApp)` to demonstrate the bare essentials.
+| Path | Focus |
+| --- | --- |
+| `unicafe-redux` | minimal Redux store and reducer testing |
+| `redux-anecdotes` | Redux Toolkit, async thunks, filtering, and notifications |
+| `query-anecdotes` | TanStack Query caching, mutations, and server validation |
 
-Run:
+## Covered Work
 
-- `cd part6/unicafe-redux`
-- `npm install`
-- `npm run dev` (http://localhost:5173)
+- using Redux for global state
+- structuring state with Redux Toolkit slices
+- fetching and mutating server data
+- comparing Redux and TanStack Query approaches
+- showing notifications based on async actions
 
-## redux-anecdotes (Redux Toolkit)
+## Run Locally
 
-- Anecdote list with voting, creation, filtering, and notifications.
-- State is managed with RTK slices (`anecdotes`, `filter`, `notification`); async thunks load/create/vote via `json-server`.
-- Sorting is kept in-state (`votes` desc) to keep UI consistent.
+Each project is independent:
 
-Run:
+```bash
+cd part6/<project>
+npm install
+npm run dev
+```
 
-- `cd part6/redux-anecdotes`
-- `npm install`
-- `npm run server` (starts json-server on http://localhost:3001/anecdotes)
-- In another terminal: `npm run dev` (http://localhost:5173)
-- Optional: `npm run lint`
+For the anecdotes apps, run the backend helper in a separate terminal before starting the UI.
 
-## query-anecdotes (TanStack Query v5)
+## Notes
 
-- Same anecdotes feature set rebuilt with React Query: caching, retries, invalidation, optimistic vote updates.
-- Notifications via context provider; json-server validator rejects anecdotes shorter than 5 chars and the error is surfaced to the UI.
-
-Run:
-
-- `cd part6/query-anecdotes`
-- `npm install`
-- `npm run server` (custom `server.js` with validation on http://localhost:3001/anecdotes)
-- In another terminal: `npm run dev` (http://localhost:5173)
-- Optional: `npm run lint`
-
-Notes:
-
-- Backends for `redux-anecdotes` and `query-anecdotes` both use port 3001; run only one server at a time.
+- `redux-anecdotes` and `query-anecdotes` both use port `3001` for their local backend, so run only one of those servers at a time.

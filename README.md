@@ -1,80 +1,77 @@
-https://fullstackopen.com/en/about
+# FullStack Open Coursework
 
-# 📘 FullStack Open — Coursework
+Solutions for the University of Helsinki [Full Stack Open](https://fullstackopen.com/en/about) course.
 
-This repository contains my solutions for the **FullStack Open** course by the University of Helsinki.
+The repository currently covers Parts 0-7 and is organized by course part. Each project lives in its own directory with its own dependencies and scripts.
 
-The course covers modern full-stack development using:
+## Repository Structure
 
-- ⚛️ React (frontend)
-- 🟦 Node.js + Express (backend)
-- 🌐 REST APIs
-- 🗄️ Databases
-- 🧪 Testing
-- 🚀 Deployment
+| Part | Topics | Projects |
+| --- | --- | --- |
+| [Part 0](./part0) | Fundamentals of web apps, browser-server flow | sequence diagrams and screenshots |
+| [Part 1](./part1) | React basics, state, events | `courseinfo`, `unicafe`, `anecdotes` |
+| [Part 2](./part2) | Server communication, forms, reusable components | `courseinfo`, `phonebook`, `country` |
+| [Part 3](./part3) | Express, MongoDB, deployment | `phonebook_backend`, `phonebook_frontend` |
+| [Part 4](./part4) | Testing Express APIs, authentication, user admin | `bloglist` |
+| [Part 5](./part5) | Testing React apps | `bloglist-frontend`, `bloglist-e2e` |
+| [Part 6](./part6) | Redux Toolkit, React Query | `unicafe-redux`, `redux-anecdotes`, `query-anecdotes` |
+| [Part 7](./part7) | React Router, custom hooks, richer app structure | multiple bloglist and hook-based apps |
 
----
+## Highlighted Projects
 
-## 📚 Course Progress
+- [Part 3 Phonebook](./part3/README.md): full-stack phonebook app with an Express/MongoDB backend and a deployed Render instance.
+- [Part 4 Bloglist Backend](./part4/README.md): authenticated blog API with `node:test`, SuperTest, validation, and seed scripts.
+- [Part 5 Bloglist Frontend and E2E](./part5/README.md): React frontend with component tests plus Playwright end-to-end coverage.
+- [Part 6 State Management Apps](./part6/README.md): Redux Toolkit and TanStack Query implementations of the anecdotes app.
+- [Part 7 Bloglist Frontends](./part7/README.md): routing, comments, notifications, and two state-management variants for the bloglist UI.
 
-### ✅ Completed
+## Quick Start
 
-- **Part 0:** Fundamentals of Web Apps
-- **Part 1:** Introduction to React
-- **Part 2:** Communicating with Server
-- **Part 3:** Programming a Server with NodeJS and Express
-  _ Backend deployed on Render
-  _ 🔗 **Live API:**
-  https://fullstack-9acg.onrender.com/
-- **Part 4:** Testing Express servers, user administration
-  - node:test + Supertest coverage for the blog API (CRUD + auth)
-  - Password hashing, JWT login, request validation, test DB resets via `/api/testing/reset`
-- **Part 5:** Testing React apps
-  - Bloglist SPA (React + Vite): login, create, like, delete, sort by likes
-  - Vitest + Testing Library unit/integration tests; Playwright E2E suite
-- **Part 6:** Advanced state management
-  - `redux-anecdotes` — Redux Toolkit slices + async thunks against `json-server`; filtering and timed notifications.
-  - `query-anecdotes` — TanStack Query v5 with caching/retries, optimistic vote updates, and backend validation errors surfaced via notifications.
-  - `unicafe-redux` — minimal Redux feedback counter using manual store subscriptions.
-- **Part 7:** React Router, custom hooks, styling
-  - `bloglist-frontend-redux` — Redux Toolkit + React Router 7, blog CRUD UI with comments/likes, notifications, persisted auth. Live: https://bloglist-dunc.onrender.com/ (demo login: `demo` / `demopass`).
+Each project is self-contained. Install dependencies inside the specific directory you want to run.
 
-#### Quick start for Part 5 E2E
+### Part 4 bloglist backend
 
-- Backend: `cd part4/bloglist && npm install && npm run dev` (needs `.env` with PORT=3003, TEST_MONGODB_URI, etc.; serves http://localhost:3003).
-- Frontend: `cd part5/bloglist-frontend && npm install && npm run dev` (http://localhost:5173).
-- E2E: `cd part5/bloglist-e2e && npm install && npx playwright install && npm test`.
+```bash
+cd part4/bloglist
+npm install
+npm run dev
+```
 
-#### Quick start for Part 6 (anecdotes)
+Expected local API: `http://localhost:3003`
 
-- Redux Toolkit: `cd part6/redux-anecdotes && npm install && npm run server` (http://localhost:3001) in one terminal, then `npm run dev` (http://localhost:5173) in another.
-- React Query: `cd part6/query-anecdotes && npm install && npm run server` (http://localhost:3001) in one terminal, then `npm run dev` (http://localhost:5173) in another. Validation rejects anecdotes < 5 chars.
-> Only one json-server can listen on port 3001 at a time.
+Required environment variables are documented in [part4/bloglist/README.md](./part4/bloglist/README.md).
 
-#### Quick start for Part 7 (bloglist Redux)
+### Part 5 bloglist frontend and E2E
 
-- Backend: `cd part4/bloglist && npm install && npm run dev` (http://localhost:3003).
-- Frontend: `cd part7/bloglist-frontend-redux && npm install && npm run dev` (http://localhost:5173).
-- Tests: `npm test` (Vitest + Testing Library).
-- Build: `npm run build` / `npm run preview`.
-- Deployment: https://bloglist-dunc.onrender.com/ (demo login: `demo` / `demopass`).
+```bash
+cd part5/bloglist-frontend
+npm install
+npm run dev
+```
 
----
+```bash
+cd part5/bloglist-e2e
+npm install
+npm test
+```
 
-### 🚧 In Progress
+The frontend expects the Part 4 backend to be running. Playwright tests also rely on the Part 4 backend in `NODE_ENV=test`.
 
-- None right now
+### Part 7 bloglist frontend (Redux)
 
-### Upcoming Course Parts
+```bash
+cd part7/bloglist-frontend-redux
+npm install
+npm run dev
+```
 
-- Part 8: GraphQL
+Expected local UI: `http://localhost:5173`
 
-- Part 9: TypeScript
+The frontend uses relative `/api/...` endpoints and is intended to run against the Part 4 backend.
 
-- Part 10: React Native
+## Repository Notes
 
-- Part 11: CI/CD
-
-- Part 12: Containers
-
-- Part 13: Relational databases
+- This is a course repository, not a single installable monorepo package.
+- Most projects use Vite on the frontend and Node.js/Express on the backend.
+- GitHub Actions validates the main bloglist backend and frontend projects on pushes and pull requests.
+- Parts 8-13 are not included in this repository yet.
