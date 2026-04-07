@@ -1,10 +1,10 @@
-const { test, describe, after, beforeEach } = require("node:test");
+const { test, describe, before, after, beforeEach } = require("node:test");
 const assert = require("node:assert");
 const mongoose = require("mongoose");
 const supertest = require("supertest");
 const bcrypt = require("bcrypt");
 
-const app = require("../app");
+const { app, mongoConnection } = require("../app");
 const Blog = require("../models/blog");
 const User = require("../models/user");
 const helper = require("./test_helper");
@@ -12,6 +12,10 @@ const helper = require("./test_helper");
 process.env.SECRET = process.env.SECRET || "testsecret";
 
 const api = supertest(app);
+
+before(async () => {
+  await mongoConnection;
+});
 
 // Helpers
 const loginAndGetToken = async (username, password) => {
@@ -293,6 +297,7 @@ describe("DELETE /api/blogs/:id authorization", () => {
 });
 
 after(async () => {
+  await mongoConnection.catch(() => null);
   await mongoose.connection.close();
 });
 
