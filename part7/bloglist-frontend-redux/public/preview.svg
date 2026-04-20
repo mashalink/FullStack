@@ -1,0 +1,82 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-labelledby="title desc">
+  <title id="title">Bloglist social preview</title>
+  <desc id="desc">Social sharing image for the Bloglist full-stack application.</desc>
+  <defs>
+    <linearGradient id="panelGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFFFFF" />
+      <stop offset="100%" stop-color="#FFF6FA" />
+    </linearGradient>
+    <linearGradient id="accentGlow" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#FFB8D2" />
+      <stop offset="100%" stop-color="#E8455A" />
+    </linearGradient>
+  </defs>
+
+  <rect width="1200" height="630" fill="#F7F4F1" />
+  <circle cx="1100" cy="110" r="160" fill="#FFEEF5" />
+  <circle cx="102" cy="566" r="130" fill="#FFDDEB" />
+  <circle cx="980" cy="530" r="72" fill="#0D1B4B" opacity=".06" />
+
+  <rect x="72" y="72" width="1056" height="486" rx="42" fill="url(#panelGlow)" stroke="#FFD6E7" stroke-width="4" />
+
+  <g transform="translate(110 108)">
+    <rect x="0" y="0" width="142" height="142" rx="32" fill="#0D1B4B" />
+    <path
+      d="M40 34c0-5.5 4.5-10 10-10h48c2.8 0 5 2.2 5 5v72c0 3.9-3.1 7-7 7H51
+         c-6.1 0-11-4.9-11-11V34Z"
+      fill="#FFFFFF"
+    />
+    <path
+      d="M40 34c0-5.5 4.5-10 10-10h12v84H51c-6.1 0-11-4.9-11-11V34Z"
+      fill="#FFB8D2"
+    />
+    <circle cx="95" cy="91" r="11" fill="#E8455A" />
+  </g>
+
+  <text x="110" y="320" fill="#0D1B4B" font-family="Georgia, 'Times New Roman', serif" font-size="84" font-weight="700">
+    Bloglist
+  </text>
+  <text x="110" y="378" fill="#42506D" font-family="Helvetica, Arial, sans-serif" font-size="32">
+    Full-stack app for managing blogs, users, likes, and comments.
+  </text>
+
+  <g transform="translate(110 428)">
+    <rect width="182" height="42" rx="21" fill="#0D1B4B" />
+    <text x="28" y="28" fill="#FFFFFF" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="700">
+      React + Redux
+    </text>
+    <rect x="198" width="170" height="42" rx="21" fill="#FFEEF5" stroke="#FFD6E7" />
+    <text x="228" y="28" fill="#0D1B4B" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="700">
+      Express API
+    </text>
+    <rect x="384" width="160" height="42" rx="21" fill="#FFEEF5" stroke="#FFD6E7" />
+    <text x="420" y="28" fill="#0D1B4B" font-family="Helvetica, Arial, sans-serif" font-size="20" font-weight="700">
+      MongoDB
+    </text>
+  </g>
+
+  <g transform="translate(764 156)">
+    <rect x="0" y="40" width="298" height="148" rx="28" fill="#FFFFFF" stroke="#FFD6E7" stroke-width="3" />
+    <rect x="32" y="76" width="126" height="18" rx="9" fill="#FFB8D2" />
+    <rect x="32" y="110" width="204" height="16" rx="8" fill="#0D1B4B" opacity=".12" />
+    <rect x="32" y="138" width="168" height="16" rx="8" fill="#0D1B4B" opacity=".12" />
+    <circle cx="246" cy="114" r="26" fill="#0D1B4B" />
+    <path d="M238 114l5 5 11-12" fill="none" stroke="#FFB8D2" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+
+    <rect x="22" y="0" width="298" height="148" rx="28" fill="#FFFFFF" stroke="#FFD6E7" stroke-width="3" />
+    <rect x="54" y="36" width="118" height="18" rx="9" fill="url(#accentGlow)" />
+    <rect x="54" y="70" width="198" height="16" rx="8" fill="#0D1B4B" opacity=".12" />
+    <rect x="54" y="98" width="146" height="16" rx="8" fill="#0D1B4B" opacity=".12" />
+    <rect x="54" y="126" width="108" height="16" rx="8" fill="#0D1B4B" opacity=".12" />
+    <circle cx="268" cy="76" r="24" fill="#FFEEF5" stroke="#FFD6E7" />
+    <path d="M258 76h20M268 66v20" stroke="#E8455A" stroke-width="4" stroke-linecap="round" />
+
+    <rect x="44" y="176" width="298" height="148" rx="28" fill="#0D1B4B" />
+    <rect x="76" y="212" width="144" height="18" rx="9" fill="#FFB8D2" />
+    <rect x="76" y="246" width="212" height="16" rx="8" fill="#FFFFFF" opacity=".16" />
+    <rect x="76" y="274" width="156" height="16" rx="8" fill="#FFFFFF" opacity=".16" />
+    <rect x="76" y="302" width="112" height="16" rx="8" fill="#FFFFFF" opacity=".16" />
+    <circle cx="278" cy="246" r="24" fill="#FFFFFF" opacity=".12" />
+    <path d="M268 246h20M268 258h14" stroke="#FFB8D2" stroke-width="4" stroke-linecap="round" />
+  </g>
+</svg>

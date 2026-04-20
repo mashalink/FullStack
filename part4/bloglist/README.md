@@ -77,6 +77,7 @@ npm run start:test
 
 ## Notes
 
+- Live app: `https://bloglist-dunc.onrender.com/`
 - Tests use `TEST_MONGODB_URI` with `NODE_ENV=test`.
 - Parts 5 and 7 expect this backend to be available at `http://localhost:3003`.
 - `npm run build` uses `part7/bloglist-frontend-redux` as the UI source for the served production bundle.
